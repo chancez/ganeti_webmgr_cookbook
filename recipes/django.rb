@@ -5,6 +5,7 @@ application "ganeti_webmgr" do
   repository "git://git.osuosl.org/gitolite/ganeti/ganeti_webmgr"
   revision "release/0.10"
   migrate true
+  packages ["git-core"]
 
   django do
     requirements "requirements/prod.txt"
