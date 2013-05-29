@@ -12,9 +12,9 @@ application "ganeti_webmgr" do
     debug true
     local_settings_file "settings.py"
     settings_template "settings.py.erb"
-    # database do
-    #   database "gwm"
-    #   engine "sqlite3"
-    # end
+    database do
+      database "gwm"
+      engine "sqlite3"
+    end
   end
 end
