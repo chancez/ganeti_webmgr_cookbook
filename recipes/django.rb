@@ -2,7 +2,7 @@ application "ganeti_webmgr" do
   path "/home/vagrant/ganeti_webmgr"
   owner "vagrant"
   group "vagrant"
-  repository "git://github.com/osuosl/ganeti_webmgr.git"
+  repository "git://git.osuosl.org/gitolite/ganeti/ganeti_webmgr"
   revision "release/0.10"
   migrate true
 
