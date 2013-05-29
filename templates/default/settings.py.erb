@@ -1,0 +1,122 @@
+from ganeti_web.settings import *
+
+import os.path
+
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+
+TESTING = False
+# Setting this to False disables south migrations when running tests.
+SOUTH_TESTS_MIGRATE = False
+SKIP_SOUTH_TESTS = True
+
+ADMINS = (
+    # ('Your Name', 'your_email@example.com'),
+)
+
+MANAGERS = ADMINS
+
+DATABASES = {
+    'default': {
+        # Add 'postgresql_psycopg2', 'postgresql', 'mysql',
+        # 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.sqlite3',
+
+        # Or path to database file if using sqlite3.
+        'NAME': 'ganeti.db',
+        'USER': '',      # Not used with sqlite3.
+        'PASSWORD': '',  # Not used with sqlite3.
+        'HOST': '',      # Set to empty string for localhost.
+                         # Not used with sqlite3.
+        'PORT': '',      # Set to empty string for default.
+                         #Not used with sqlite3.
+    }
+}
+LANGUAGE_CODE = 'en-US'
+
+SITE_ID = 1
+
+SITE_NAME = 'Ganeti Web Manager'
+SITE_DOMAIN = 'localhost:8000'
+
+USE_I18N = True
+USE_L10N = True
+
+DOC_ROOT = os.path.dirname(os.path.realpath(__file__))
+
+SITE_ROOT = ''
+
+STATIC_ROOT = '%s/static' % DOC_ROOT
+STATIC_URL = '%s/static' % SITE_ROOT
+
+LOCALE_PATHS = (
+    '%s/locale' % DOC_ROOT,
+)
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = '!c&bm88vo=gby*vxf2gydv8hc!+f+eo+yu&!g&!)#n5quwsr82'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    # 'django_auth_ldap.backend.LDAPBackend',
+    'object_permissions.backend.ObjectPermBackend',
+)
+
+ROOT_URLCONF = 'urls'
+
+TEMPLATE_DIRS = (
+    'templates/'
+)
+
+# Search settings
+HAYSTACK_SITECONF = 'search_sites'
+HAYSTACK_SEARCH_ENGINE = 'whoosh'
+HAYSTACK_WHOOSH_PATH = os.path.join(DOC_ROOT, 'whoosh_index')
+
+LOGIN_REDIRECT_URL = '/'
+
+DATE_FORMAT = "d/m/Y"
+DATETIME_FORMAT = "d/m/Y H:i"
+
+ACCOUNT_ACTIVATION_DAYS = 7
+
+# Email settings for registration
+EMAIL_HOST = "localhost"
+EMAIL_PORT = "25"
+# DEFAULT_FROM_EMAIL = "noreply@example.org"
+
+ALLOW_OPEN_REGISTRATION = True
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    }
+}
+
+# default items per page
+ITEMS_PER_PAGE = 10
+
+# default max number of disks that can be added at once to an instance
+MAX_DISKS_ADD = 6
+# default max number of NICS that can be added at once to an instance
+MAX_NICS_ADD = 6
+
+LAZY_CACHE_REFRESH = 600000
+
+VNC_PROXY = 'localhost:8888'
+
+WEB_MGR_API_KEY = "CHANGE_ME"
+
+RAPI_CONNECT_TIMEOUT = 3
