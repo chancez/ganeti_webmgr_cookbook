@@ -6,4 +6,38 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-include_recipe "ganeti_webmgr::django"
+
+application "ganeti_webmgr" do
+  path "/home/vagrant/ganeti_webmgr"
+  owner "vagrant"
+  group "vagrant"
+  repository "git://git.osuosl.org/gitolite/ganeti/ganeti_webmgr"
+  revision "release/0.10"
+  migrate true
+  packages ["git-core"]
+
+  django do
+    requirements "requirements/prod.txt"
+    debug true
+    local_settings_file "settings.py"
+    settings_template "settings.py.erb"
+    collectstatic true
+    database do
+      database "ganeti.db"
+      engine "sqlite3"
+    end
+  end
+
+  gunicorn do
+    only_if { node['roles'].include? 'ganeti_web_application_server' }
+    app_module :django
+    port 80
+  end
+
+  nginx_load_balancer do
+    only_if { node['roles'].include? 'ganeti_web_load_balancer' }
+    application_port 80
+    static_files "/static" => "static"
+  end
+
+end
