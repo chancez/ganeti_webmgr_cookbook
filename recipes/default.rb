@@ -11,13 +11,14 @@ application "ganeti_webmgr" do
   path "/home/vagrant/ganeti_webmgr"
   owner "vagrant"
   group "vagrant"
-  repository "git://git.osuosl.org/gitolite/ganeti/ganeti_webmgr"
-  revision "release/0.10"
+  repository "https://github.com/ecnahc515/ganeti_webmgr"
+  revision "deploy"
   migrate true
   packages ["git-core"]
 
   django do
     requirements "requirements/prod.txt"
+    packages ["gunicorn"]
     debug true
     local_settings_file "settings.py"
     settings_template "settings.py.erb"
