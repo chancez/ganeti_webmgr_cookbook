@@ -7,6 +7,9 @@
 # All rights reserved - Do Not Redistribute
 #
 
+include_recipe "application_nginx"
+include_recipe "application_python"
+
 application "ganeti_webmgr" do
   path "/home/vagrant/ganeti_webmgr"
   owner "vagrant"
