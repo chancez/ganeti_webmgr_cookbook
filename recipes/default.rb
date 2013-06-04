@@ -30,14 +30,15 @@ application "ganeti_webmgr" do
   end
 
   gunicorn do
-    only_if { node['roles'].include? 'ganeti_web_application_server' }
-    app_module "ganeti_web"
-    port 8000
+    only_if { node['roles'].include? 'ganeti_webmgr_application_server' }
+    app_module :django
+    port 8080
+    loglevel "debug"
   end
 
   nginx_load_balancer do
-    only_if { node['roles'].include? 'ganeti_web_load_balancer' }
-    application_port 8000
+    only_if { node['roles'].include? 'ganeti_webmgr_load_balancer' }
+    application_port 8080
     static_files "/static" => "static"
   end
 
