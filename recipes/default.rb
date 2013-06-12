@@ -6,8 +6,9 @@
 #
 # All rights reserved - Do Not Redistribute
 #
+include_recipe "nginx"
 
-application "ganeti_webmgr" do
+gwm = application "ganeti_webmgr" do
   path "/home/vagrant/ganeti_webmgr"
   owner "vagrant"
   group "vagrant"
@@ -18,7 +19,6 @@ application "ganeti_webmgr" do
 
   django do
     requirements "requirements/prod.txt"
-    packages ["gunicorn"]
     debug true
     local_settings_file "settings.py"
     settings_template "settings.py.erb"
@@ -30,16 +30,27 @@ application "ganeti_webmgr" do
   end
 
   gunicorn do
-    only_if { node['roles'].include? 'ganeti_webmgr_application_server' }
     app_module :django
-    port 8080
-    loglevel "debug"
+    port 8000
   end
 
-  nginx_load_balancer do
-    only_if { node['roles'].include? 'ganeti_webmgr_load_balancer' }
-    application_port 8080
-    static_files "/static" => "static"
-  end
+  self
+end
 
+# set up nginx
+template "#{node['nginx']['dir']}/sites-available/#{gwm.name}.conf" do
+  source "nginx_site.conf.erb"
+  mode "664"
+  owner "root"
+  group "root"
+  variables :resource => gwm, :application_port => 8000 # where gunicorn listens
+  notifies :reload, resources(:service => 'nginx')
+end
+
+# enable the site (default action)
+nginx_site "#{gwm.name}.conf"
+
+# disable the default nginx site
+nginx_site "default" do
+  enable false
 end
