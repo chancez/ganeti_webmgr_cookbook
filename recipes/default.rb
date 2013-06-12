@@ -6,10 +6,12 @@
 #
 # All rights reserved - Do Not Redistribute
 #
+
+
 include_recipe "nginx"
 
 gwm = application "ganeti_webmgr" do
-  path "/home/vagrant/ganeti_webmgr"
+  path node['ganeti_webmgr']['path']
   owner "vagrant"
   group "vagrant"
   repository "https://github.com/ecnahc515/ganeti_webmgr"
@@ -26,6 +28,12 @@ gwm = application "ganeti_webmgr" do
     database do
       database "ganeti.db"
       engine "sqlite3"
+    end
+  end
+
+  migration_command do
+    execute "#{::File.join(virtualenv, 'bin', 'python')} manage.py" do
+      # blank
     end
   end
 
