@@ -33,7 +33,7 @@ gwm = application "ganeti_webmgr" do
 
   migration_command do
     execute "#{::File.join(virtualenv, 'bin', 'python')} manage.py" do
-      # blank
+      command "syncdb --migrate"
     end
   end
 

@@ -1,0 +1,1 @@
+default['ganeti_webmgr']['path'] = "/home/vagrant/ganeti_webmgr"
