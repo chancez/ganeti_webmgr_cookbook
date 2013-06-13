@@ -17,7 +17,15 @@ gwm = application "ganeti_webmgr" do
   repository "https://github.com/ecnahc515/ganeti_webmgr"
   revision "deploy"
   migrate true
-  packages ["git-core"]
+  # this needs to be another join instead of execute i think
+  migration_command do
+    execute "#{::File.join(node['ganeti_webmgr']['virtualenv'], 'bin', 'python')}" do
+      #manage = ::File.join(node['ganeti_webmgr']['path'], 'current', 'manage.py')
+      manage = ::File.join(release_path, "manage.py")
+      command "#{manage} syncdb --migrate"
+    end
+  end
+  packages ['git-core', 'htop']
 
   django do
     requirements "requirements/prod.txt"
@@ -25,15 +33,10 @@ gwm = application "ganeti_webmgr" do
     local_settings_file "settings.py"
     settings_template "settings.py.erb"
     collectstatic true
+    #{}"/home/vagrant/ganeti_webmgr/shared/env/bin/python manage.py migrate"
     database do
       database "ganeti.db"
       engine "sqlite3"
-    end
-  end
-
-  migration_command do
-    execute "#{::File.join(virtualenv, 'bin', 'python')} manage.py" do
-      command "syncdb --migrate"
     end
   end
 
