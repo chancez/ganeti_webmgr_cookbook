@@ -7,58 +7,58 @@
 # All rights reserved - Do Not Redistribute
 #
 
-
 include_recipe "nginx"
 
-gwm = application "ganeti_webmgr" do
-  path node['ganeti_webmgr']['path']
+app = node['ganeti_webmgr']
+
+application app['name'] do
+  path app['path']
   owner "vagrant"
   group "vagrant"
-  repository "https://github.com/ecnahc515/ganeti_webmgr"
-  revision "deploy"
+  repository "https://github.com/osuosl/ganeti_webmgr"
+  revision "feature/14625"
   migrate true
+  # rollback_on_error false
   packages ["git-core"]
 
   django do
     requirements "requirements/prod.txt"
     debug true
-    local_settings_file "settings.py"
-    settings_template "settings.py.erb"
+    local_settings_file "ganeti_web/ganeti_web/settings/end_user.py"
+    settings_template "end_user.py.erb"
+    settings :app => app
     collectstatic true
+    manage_file "ganeti_web/manage.py"
     database do
-      database "ganeti.db"
+      database "#{app.path}/shared/ganeti.db"
       engine "sqlite3"
     end
-  end
 
-  migration_command do
-    execute "#{::File.join(virtualenv, 'bin', 'python')} manage.py" do
-      command "syncdb --migrate"
-    end
+    venv = "#{app.path}/shared/env"
+    manage_cmd = "#{::File.join(venv, "bin", "python")} #{manage_file}"
+    syncdb_cmd = "#{manage_cmd} syncdb --noinput"
+    migration_command "#{syncdb_cmd} && #{manage_cmd} migrate"
   end
 
   gunicorn do
-    app_module :django
-    port 8000
+    app_module 'ganeti_web.wsgi:application'
+    port app['gunicorn']['port']
+    directory "#{::File.join(app.path, "current", "ganeti_web")}"
   end
 
-  self
 end
 
-# set up nginx
-template "#{node['nginx']['dir']}/sites-available/#{gwm.name}.conf" do
+# set up nginx config
+template "#{node.nginx.dir}/sites-available/#{app.name}.conf" do
   source "nginx_site.conf.erb"
-  mode "664"
+  mode 0664
   owner "root"
   group "root"
-  variables :resource => gwm, :application_port => 8000 # where gunicorn listens
-  notifies :reload, resources(:service => 'nginx')
+  variables ({
+    :app => app,
+    :application_port => app['gunicorn']['port']
+  })
+  notifies :reload, "service[nginx]"
 end
 
-# enable the site (default action)
-nginx_site "#{gwm.name}.conf"
-
-# disable the default nginx site
-nginx_site "default" do
-  enable false
-end
+nginx_site "#{app.name}.conf"

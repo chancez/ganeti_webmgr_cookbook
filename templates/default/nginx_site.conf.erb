@@ -1,13 +1,13 @@
-upstream <%= @resource.name %> {
+upstream <%= @app.name %> {
   server <%= node.ipaddress %>:<%= @application_port %>;
 }
 
 server {
   listen 80;
-  server_name <%= @resource.name %>;
+  server_name <%= @app.name %>;
 
   location /static {
-    alias /home/vagrant/ganeti_webmgr/current/static;
+     alias <%= @app.collectstatic_dir %>;
   }
 
   location / {
@@ -15,6 +15,6 @@ server {
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
-    proxy_pass http://<%= @resource.name %>;
+    proxy_pass http://<%= @app.name %>;
   }
 }
