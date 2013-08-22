@@ -7,8 +7,6 @@
 # All rights reserved - Do Not Redistribute
 #
 
-include_recipe "nginx"
-
 app = node['ganeti_webmgr']
 
 application app['name'] do
@@ -42,23 +40,10 @@ application app['name'] do
 
   gunicorn do
     app_module 'ganeti_web.wsgi:application'
-    port app['gunicorn']['port']
+    port app['port']
     directory "#{::File.join(app.path, "current", "ganeti_web")}"
   end
 
 end
 
-# set up nginx config
-template "#{node.nginx.dir}/sites-available/#{app.name}.conf" do
-  source "nginx_site.conf.erb"
-  mode 0664
-  owner "root"
-  group "root"
-  variables ({
-    :app => app,
-    :application_port => app['gunicorn']['port']
-  })
-  notifies :reload, "service[nginx]"
-end
-
-nginx_site "#{app.name}.conf"
+include_recipe "ganeti_webmgr::proxy"
