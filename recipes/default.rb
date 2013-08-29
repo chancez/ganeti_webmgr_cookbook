@@ -85,6 +85,8 @@ python_pip requirements do
     action :install
 end
 
+log "Copying settings "
+
 include_recipe "ganeti_webmgr::proxy"
 
 # application app['name'] do

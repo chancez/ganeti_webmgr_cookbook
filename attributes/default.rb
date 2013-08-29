@@ -11,6 +11,11 @@ default['ganeti_webmgr']['host'] = node['fqdn']
 default['ganeti_webmgr']['port'] = 8000
 
 default['ganeti_webmgr']['requirements'] = "requirements/prod.txt"
+default['ganeti_webmgr']['debug'] = False
+default['ganeti_webmgr']['settings_template'] = "end_user.py.erb"
+default['ganeti_webmgr']['local_settings_file'] = "ganeti_web/ganeti_web/settings/end_user.py"
+default['ganeti_webmgr']['settings'] = nil
+default['ganeti_webmgr']['manage_file'] = "ganeti_web/manage.py"
 
 default['ganeti_webmgr']['database']['engine'] = engine = "mysql"
 db = Chef::DataBagItem.load("database", engine)
