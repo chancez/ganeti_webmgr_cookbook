@@ -10,6 +10,7 @@
 app = node['ganeti_webmgr']
 db = app['database']
 venv = app["virtualenv"]
+project_location = ::File.join(app.path, app.name)
 
 include_recipe "python"
 
@@ -28,8 +29,6 @@ app['packages'].each do |pkg|
   end
 end
 
-
-project_location = ::File.join(app.path, app.name)
 if node.chef_environment == "vagrant"
   if app.synced_folder.nil?
     raise "Node attribute synced_folder must be set."
@@ -85,7 +84,29 @@ python_pip requirements do
     action :install
 end
 
-log "Copying settings "
+# TODO: Needs testing
+if node.chef_environment == "production"
+  settings_location = "#{project_location}/#{app.local_settings_file}"
+  log "Copying #{app.settings_template} to #{settings_location}"
+
+  # host = search for db server
+  host = nil
+  template settings_location do
+    source app.settings_template || "settings.py.erb"
+    owner app.owner
+    group app.group
+    mode 0644
+    variables app.settings.clone
+    variables.update({
+      :app => app,
+      :debug => app.debug,
+      :database => {
+        :settings => db,
+        :host => host || db.host
+      }
+    })
+  end
+end
 
 include_recipe "ganeti_webmgr::proxy"
 
