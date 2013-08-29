@@ -1,5 +1,8 @@
 default['ganeti_webmgr']['name'] = "ganeti_webmgr"
 default['ganeti_webmgr']['path'] = path = "/home/vagrant/gwm"
+default['ganeti_webmgr']['repository'] = "https://github.com/osuosl/ganeti_webmgr"
+default['ganeti_webmgr']['revision'] = "feature/14625"
+
 default['ganeti_webmgr']['packages'] = ['git-core']
 default['ganeti_webmgr']['pip_packages'] = []
 default['ganeti_webmgr']['virtualenv'] = "#{path}/venv"

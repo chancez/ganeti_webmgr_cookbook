@@ -85,27 +85,31 @@ python_pip requirements do
 end
 
 # TODO: Needs testing
-if node.chef_environment == "production"
-  settings_location = "#{project_location}/#{app.local_settings_file}"
-  log "Copying #{app.settings_template} to #{settings_location}"
+settings_location = "#{project_location}/#{app.local_settings_file}"
+log "Copying #{app.settings_template} to #{settings_location}"
+settings_exist = File.exists?(settings_location)
+# host = search for db server
+host = nil
+template settings_location do
+  source app.settings_template || "settings.py.erb"
+  owner app.owner
+  group app.group
+  mode 0644
+  variables app.settings.dup
+  variables.update({
+    :app => app,
+    :debug => app.debug,
+    :database => {
+      :settings => db,
+      :host => host || db.host
+    }
+  })
+  not_if { settings_exist }
+end
 
-  # host = search for db server
-  host = nil
-  template settings_location do
-    source app.settings_template || "settings.py.erb"
-    owner app.owner
-    group app.group
-    mode 0644
-    variables app.settings.clone
-    variables.update({
-      :app => app,
-      :debug => app.debug,
-      :database => {
-        :settings => db,
-        :host => host || db.host
-      }
-    })
-  end
+log "Skipping copying settings. Settings file already exists" do
+  level :warn
+  only_if { settings_exist }
 end
 
 include_recipe "ganeti_webmgr::proxy"
