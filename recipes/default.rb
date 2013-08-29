@@ -88,8 +88,20 @@ end
 settings_location = "#{project_location}/#{app.local_settings_file}"
 log "Copying #{app.settings_template} to #{settings_location}"
 settings_exist = File.exists?(settings_location)
-# host = search for db server
-host = nil
+
+if settings_exist
+  if app.overwrite_settings
+    msg = "Overwriting existing settings file because "
+          "attribute 'overwrite_settings' is set to #{app.overwrite_settings}."
+  else
+    msg = "Skipping copying settings. Settings file already exists."
+  end
+  log msg do
+    level :warn
+  end
+end
+
+# WIP?
 template settings_location do
   source app.settings_template || "settings.py.erb"
   owner app.owner
@@ -101,18 +113,37 @@ template settings_location do
     :debug => app.debug,
     :database => {
       :settings => db,
-      :host => host || db.host
+      :host => db.host
     }
   })
-  not_if { settings_exist }
+  not_if { settings_exist && !app.overwrite_settings }
 end
 
-log "Skipping copying settings. Settings file already exists" do
-  level :warn
-  only_if { settings_exist }
+log "Running migrations"
+# Migrations
+if app.migrate
+  # Setup our commands to run manage.py with the virtualenv
+  manage_cmd = "#{::File.join(venv, "bin", "python")} #{app.manage_file}"
+  syncdb_cmd = "#{manage_cmd} syncdb --noinput"
+  migrate_cmd = "#{manage_cmd} migrate"
+
+  log "Migration Commands" do
+    level :debug
+    message "syncdb_cmd: #{syncdb_cmd}\nmigrate_cmd: #{migrate_cmd}"
+  end
+
+  execute "run_migrations" do
+    cwd project_location
+    command "#{syncdb_cmd} && #{migrate_cmd}"
+    only_if { ::File.exists?("#{project_location}/#{app.manage_file}") }
+  end
 end
 
-include_recipe "ganeti_webmgr::proxy"
+# gunicorn_config app.path do
+#   action :create
+# end
+
+# include_recipe "ganeti_webmgr::proxy"
 
 # application app['name'] do
 #   path app['path']

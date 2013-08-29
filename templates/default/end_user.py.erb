@@ -27,9 +27,9 @@ MANAGERS = ADMINS
 ##### Database Configuration #####
 DATABASES = {
     'default': {
-        'NAME': '<%= @database[:settings][:database] %>',
+        'NAME': '<%= @database[:settings][:name] %>',
         'ENGINE': 'django.db.backends.<%= @database[:settings][:engine] %>',
-        'USER': '<%= @database[:settings][:username] %>',
+        'USER': '<%= @database[:settings][:user] %>',
         'PASSWORD': '<%= @database[:settings][:password] %>',
         'HOST': '<%= @database[:host] %>',
         'PORT': '<%= @database[:settings][:port]  %>',
