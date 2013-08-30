@@ -91,8 +91,7 @@ settings_exist = File.exists?(settings_location)
 
 if settings_exist
   if app.overwrite_settings
-    msg = "Overwriting existing settings file because "
-          "attribute 'overwrite_settings' is set to #{app.overwrite_settings}."
+    msg = "Overwriting existing settings file because attribute 'overwrite_settings' is set to #{app.overwrite_settings}."
   else
     msg = "Skipping copying settings. Settings file already exists."
   end
