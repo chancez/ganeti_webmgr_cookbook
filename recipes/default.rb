@@ -119,9 +119,9 @@ template settings_location do
   not_if { settings_exist && !app.overwrite_settings }
 end
 
-log "Running migrations"
 # Migrations
 if app.migrate
+  log "Running migrations"
   # Setup our commands to run manage.py with the virtualenv
   manage_cmd = "#{::File.join(venv, "bin", "python")} #{app.manage_file}"
   syncdb_cmd = "#{manage_cmd} syncdb --noinput"
@@ -137,10 +137,14 @@ if app.migrate
     command "#{syncdb_cmd} && #{migrate_cmd}"
     only_if { ::File.exists?("#{project_location}/#{app.manage_file}") }
   end
+else
+  log "Skipping migrations because the migrate attribute is set to #{app.migrate}."
 end
 
 # gunicorn_config app.path do
 #   action :create
 # end
 
-include_recipe "ganeti_webmgr::proxy"
+if !app.http_proxy.variant.nil?
+  include_recipe "ganeti_webmgr::proxy"
+end
