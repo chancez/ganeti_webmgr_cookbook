@@ -1,5 +1,5 @@
 default['ganeti_webmgr']['name'] = "ganeti_webmgr"
-default['ganeti_webmgr']['path'] = path = "/home/vagrant/gwm"
+default['ganeti_webmgr']['path'] = path = "/var/lib/django"
 default['ganeti_webmgr']['repository'] = "https://github.com/osuosl/ganeti_webmgr"
 default['ganeti_webmgr']['revision'] = "feature/14625"
 
@@ -31,7 +31,7 @@ default['ganeti_webmgr']['database']['password'] = db['password']
 default['ganeti_webmgr']['database']['host'] = db['host']
 default['ganeti_webmgr']['database']['port'] = db['port']
 
-default['ganeti_webmgr']['collectstatic_dir'] = "#{default['ganeti_webmgr']['path']}/shared/collected_static"
+default['ganeti_webmgr']['collectstatic_dir'] = "#{default['ganeti_webmgr']['path']}/collected_static"
 
 default['ganeti_webmgr']['http_proxy']['variant'] = "nginx"
 default['ganeti_webmgr']['http_proxy']['host_name'] = nil
