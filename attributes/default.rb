@@ -12,7 +12,7 @@ end
 path = default['ganeti_webmgr']['path']
 
 default['ganeti_webmgr']['repository'] = "https://github.com/osuosl/ganeti_webmgr"
-default['ganeti_webmgr']['revision'] = "feature/14625"
+default['ganeti_webmgr']['revision'] = "develop"
 
 default['ganeti_webmgr']['packages'] = ['git-core']
 default['ganeti_webmgr']['pip_packages'] = []
@@ -22,13 +22,13 @@ default['ganeti_webmgr']['synced_folder'] = nil
 default['ganeti_webmgr']['host'] = node['fqdn']
 default['ganeti_webmgr']['port'] = 8000
 
-default['ganeti_webmgr']['requirements'] = "requirements/prod.txt"
+default['ganeti_webmgr']['requirements'] = "requirements/production.txt"
 default['ganeti_webmgr']['debug'] = false
 default['ganeti_webmgr']['settings_template'] = "end_user.py.erb"
-default['ganeti_webmgr']['local_settings_file'] = "ganeti_web/ganeti_web/settings/end_user.py"
+default['ganeti_webmgr']['local_settings_file'] = "ganeti_webmgr/ganeti_web/settings/end_user.py"
 default['ganeti_webmgr']['overwrite_settings'] = false
 default['ganeti_webmgr']['settings'] = {}
-default['ganeti_webmgr']['manage_file'] = "ganeti_web/manage.py"
+default['ganeti_webmgr']['manage_file'] = "ganeti_webmgr/manage.py"
 default['ganeti_webmgr']['migrate'] = true
 
 default['ganeti_webmgr']['database']['engine'] = engine = "mysql"
