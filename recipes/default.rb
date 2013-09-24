@@ -16,10 +16,11 @@ include_recipe "python"
 
 log "Creating project directory at #{app.path}"
 directory app.path do
-  owner app.owner
-  group app.group
-  mode 0744
+  owner app.owner if app.owner
+  group app.group if app.group
+  mode 0755
   action :create
+  recursive true
 end
 
 log "Installing system packages for #{app.name}"

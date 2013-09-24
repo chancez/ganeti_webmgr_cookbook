@@ -6,8 +6,8 @@ when "vagrant"
   default['ganeti_webmgr']['group'] = "vagrant"
 else
   default['ganeti_webmgr']['path'] = "/var/lib/django/gwm"
-  default['ganeti_webmgr']['owner'] = "ganeti_web"
-  default['ganeti_webmgr']['group'] = "ganeti_web"
+  default['ganeti_webmgr']['owner'] = nil
+  default['ganeti_webmgr']['group'] = nil
 end
 path = default['ganeti_webmgr']['path']
 
@@ -29,16 +29,15 @@ default['ganeti_webmgr']['local_settings_file'] = "ganeti_webmgr/ganeti_web/sett
 default['ganeti_webmgr']['overwrite_settings'] = false
 default['ganeti_webmgr']['settings'] = {}
 default['ganeti_webmgr']['manage_file'] = "ganeti_webmgr/manage.py"
-default['ganeti_webmgr']['migrate'] = true
+default['ganeti_webmgr']['migrate'] = false
 
 default['ganeti_webmgr']['database']['engine'] = engine = "mysql"
-db = Chef::DataBagItem.load("database", engine)
 # Load the DB Credentials using the databag as defaults.
-default['ganeti_webmgr']['database']['name'] = db['name']
-default['ganeti_webmgr']['database']['user'] = db['user']
-default['ganeti_webmgr']['database']['password'] = db['password']
-default['ganeti_webmgr']['database']['host'] = db['host']
-default['ganeti_webmgr']['database']['port'] = db['port']
+default['ganeti_webmgr']['database']['name'] = nil
+default['ganeti_webmgr']['database']['user'] = nil
+default['ganeti_webmgr']['database']['password'] = nil
+default['ganeti_webmgr']['database']['host'] = nil
+default['ganeti_webmgr']['database']['port'] = nil
 
 default['ganeti_webmgr']['collectstatic_dir'] = "#{path}/collected_static"
 
