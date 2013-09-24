@@ -43,32 +43,44 @@ else
   # Non vagrant
 end
 
-log "Creating Virtualenv"
-python_virtualenv venv do
-  path venv
-  owner app.owner
-  group app.group
-  action :create
+if venv
+  log "Creating Virtualenv"
+  python_virtualenv venv do
+    owner app.owner
+    group app.group
+    action :create
+  end
+else
+  log "Virtualenv attribute not set. Not creating virtualenv"
 end
 
 # include proper recipes and install the db driver
 db_pip_packages = case node['ganeti_webmgr']['database']['engine']
-  when "mysql"
-    include_recipe "mysql"
-    ['mysql-python']
-  when "postgresql_psycopg2"
-    include_recipe "postgres"
-    ['psycopg2']
-  when "sqlite3"
-    include_recipe "sqlite"
+when "mysql"
+  include_recipe "mysql"
+  ['mysql-python']
+when "postgresql_psycopg2"
+  include_recipe "postgres"
+  ['psycopg2']
+when "sqlite3"
+  include_recipe "sqlite"
+  []
+else
+  msg = "Node attribute ['ganeti_webmgr']['database']['engine'] \
+  not set. Defaulting to sqlite"
+  log msg do
+    level :warn
   end
+  include_recipe "sqlite"
+  []
+end
 
 log "Installing pip packages"
 # Join the two lists of packages together (no dupes)
 python_pkgs = app.pip_packages | db_pip_packages
 python_pkgs.each do |pkg|
   python_pip pkg do
-    virtualenv venv
+    virtualenv venv if venv
     user app.owner
     group app.group
     action :install
@@ -78,7 +90,7 @@ end
 requirements = ::File.join(project_location, app.requirements)
 log "Installing requirements.txt from #{requirements}"
 python_pip requirements do
-    virtualenv venv
+    virtualenv venv if venv
     options "-r"
     user app.owner
     group app.group
@@ -92,31 +104,31 @@ settings_exist = File.exists?(settings_location)
 
 if settings_exist
   if app.overwrite_settings
-    msg = "Overwriting existing settings file because attribute 'overwrite_settings' is set to #{app.overwrite_settings}."
+    msg = "Overwriting existing settings file because attribute \
+    'overwrite_settings' is set to #{app.overwrite_settings}."
   else
     msg = "Skipping copying settings. Settings file already exists."
   end
   log msg do
     level :warn
   end
-end
-
-# WIP?
-template settings_location do
-  source app.settings_template || "settings.py.erb"
-  owner app.owner
-  group app.group
-  mode 0644
-  variables app.settings.dup
-  variables.update({
-    :app => app,
-    :debug => app.debug,
-    :database => {
-      :settings => db,
-      :host => db.host
-    }
-  })
-  not_if { settings_exist && !app.overwrite_settings }
+else
+  log "No settings file found. Creating at #{settings_location}."
+  template settings_location do
+    source app.settings_template || "settings.py.erb"
+    owner app.owner
+    group app.group
+    mode 0644
+    variables app.settings.dup
+    variables.update({
+      :app => app,
+      :debug => app.debug,
+      :database => {
+        :settings => db,
+        :host => db.host
+      }
+    })
+  end
 end
 
 # Migrations
@@ -140,10 +152,6 @@ if app.migrate
 else
   log "Skipping migrations because the migrate attribute is set to #{app.migrate}."
 end
-
-# gunicorn_config app.path do
-#   action :create
-# end
 
 if !app.http_proxy.variant.nil?
   include_recipe "ganeti_webmgr::proxy"

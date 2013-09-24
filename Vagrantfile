@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
   config.omnibus.chef_version = :latest
 
   # Symlink our project for development purposes.
-  # config.vm.synced_folder "~/projects/ganeti_webmgr", "/mnt/ganeti_webmgr"
+  config.vm.synced_folder "~/projects/ganeti_webmgr", "/mnt/ganeti_webmgr"
 
   config.vm.provision :chef_solo do |chef|
     # These could be causing chef to not run..
