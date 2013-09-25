@@ -99,7 +99,7 @@ end
 
 # TODO: Needs testing
 settings_location = "#{project_location}/#{app.local_settings_file}"
-log "Copying #{app.settings_template} to #{settings_location}"
+log "Creating settings file"
 settings_exist = File.exists?(settings_location)
 
 if settings_exist
