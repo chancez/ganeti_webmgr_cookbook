@@ -1,3 +1,6 @@
+
+# Django settings for ganeti_webmgr project.
+
 from .base import *
 #from ldap_settings import *
 
@@ -45,7 +48,7 @@ DATETIME_FORMAT = "d/m/Y H:i"
 
 ##### Locale Configuration #####
 LOCALE_PATHS = (
-    join(PROJECT_ROOT, "locale"),
+    root("locale"),
 )
 
 LANGUAGES = (
@@ -88,8 +91,10 @@ STATIC_ROOT = "<%= @app[:collectstatic_dir] %>"
 # using this url easier to read.  ie.  {{STATIC_URL}}/images/foo.png
 STATIC_URL = '%s/static' % SITE_ROOT
 
-AUTHENTICATION_BACKENDS += (
-    #'django_auth_ldap.backend.LDAPBackend',
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    # 'django_auth_ldap.backend.LDAPBackend',
+    'object_permissions.backend.ObjectPermBackend',
 )
 
 ##### Registration Settings #####
@@ -140,8 +145,16 @@ RAPI_CONNECT_TIMEOUT = 3
 # XXX this is a temporary feature that will eventually be replaced by a system
 #     that automatically creates keys per virtual machine. This is just a quick
 #     way of enabled a secure method to pull sshkeys from ganeti web manager
-WEB_MGR_API_KEY = "CHANGE_ME"
+
+# Remove the # mark to uncomment and replace CHANGE_ME with a secure value.
+# WEB_MGR_API_KEY = 'CHANGE_ME'
 
 # Used for CSRF protection. Use a 16 or 32 bit random string here.
 # Do not share this with anyone.
-SECRET_KEY = '\x05\xfc\xf3\xd9\xe3\\S\xdaX\xbad\x08\xb0\x9e\t&'
+
+# Remove the # mark to uncomment and replace CHANGE_ME with a secure value.
+# SECRET_KEY = 'CHANGE_ME'
+
+STATICFILES_DIRS += (
+    root('noVNC', 'include'),
+)
