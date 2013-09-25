@@ -26,8 +26,8 @@ default['ganeti_webmgr']['port'] = 8000
 
 default['ganeti_webmgr']['requirements'] = "requirements/production.txt"
 default['ganeti_webmgr']['debug'] = false
-default['ganeti_webmgr']['settings_template'] = "end_user.py.erb"
-default['ganeti_webmgr']['local_settings_file'] = "ganeti_webmgr/ganeti_web/settings/end_user.py"
+default['ganeti_webmgr']['settings_template'] = "settings.py.erb"
+default['ganeti_webmgr']['local_settings_file'] = "ganeti_webmgr/ganeti_web/settings/settings.py"
 default['ganeti_webmgr']['overwrite_settings'] = false
 default['ganeti_webmgr']['migrate'] = false
 default['ganeti_webmgr']['settings'] = {}
