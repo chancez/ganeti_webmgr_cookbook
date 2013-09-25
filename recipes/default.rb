@@ -55,7 +55,7 @@ else
 end
 
 # include proper recipes and install the db driver
-db_pip_packages = case node['ganeti_webmgr']['database']['engine']
+db_pip_packages = case db['engine']
 when "mysql"
   include_recipe "mysql"
   ['mysql-python']
