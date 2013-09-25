@@ -7,7 +7,8 @@
             "server_repl_password": "replpass"
         },
         "ganeti_webmgr": {
-          "virtualenv": "/home/vagrant/gwm/venv"
+          "virtualenv": "/home/vagrant/gwm/venv",
+          "debug": true
         }
    },
    "chef_type": "environment",
