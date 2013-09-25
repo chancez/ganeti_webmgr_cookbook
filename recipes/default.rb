@@ -13,6 +13,7 @@ venv = app["virtualenv"]
 project_location = ::File.join(app.path, app.name)
 
 include_recipe "python"
+include_recipe "git"
 
 log "Creating project directory at #{app.path}"
 directory app.path do

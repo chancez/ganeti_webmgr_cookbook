@@ -16,7 +16,7 @@ path = default['ganeti_webmgr']['path']
 default['ganeti_webmgr']['repository'] = "https://github.com/osuosl/ganeti_webmgr"
 default['ganeti_webmgr']['revision'] = "develop"
 
-default['ganeti_webmgr']['packages'] = ['git-core']
+default['ganeti_webmgr']['packages'] = []
 default['ganeti_webmgr']['pip_packages'] = []
 default['ganeti_webmgr']['virtualenv'] = nil
 default['ganeti_webmgr']['synced_folder'] = nil
