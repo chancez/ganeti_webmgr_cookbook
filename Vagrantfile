@@ -24,10 +24,20 @@ Vagrant.configure("2") do |config|
         :server_root_password => 'rootpass',
         :server_debian_password => 'debpass',
         :server_repl_password => 'replpass'
+      },
+      :ganeti_webmgr => {
+        :database => {
+          :name => 'ganeti_webmgr',
+          :user => 'gwm_db_user',
+          :password => 'password',
+          :host => 'localhost',
+          :port => 3306,
+        },
+        :overwrite_settings => true
       }
     }
     chef.run_list = [
-        "recipe[ganeti_webmgr::default]"
+        "recipe[ganeti_webmgr::mysql]"
     ]
   end
 end

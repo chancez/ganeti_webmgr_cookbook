@@ -31,7 +31,7 @@ else
 end
 
 # include proper recipes and install the db driver
-db_pip_packages = case node['ganeti_webmgr']['database']['engine'].dup
+db_pip_packages = case node['ganeti_webmgr']['database']['engine']
 when "mysql"
   include_recipe "mysql"
   'mysql-python'
@@ -72,11 +72,13 @@ end
 
 # TODO: Needs testing
 settings_location = ::File.join(node['ganeti_webmgr']['path'], node['ganeti_webmgr']['local_settings_file'])
+create_settings = false
 log "Creating settings file"
 if File.exists?(settings_location)
   if node['ganeti_webmgr']['overwrite_settings']
     msg = "Overwriting existing settings file because attribute "\
           "'overwrite_settings' is set to #{node.ganeti_webmgr.overwrite_settings}."
+    create_settings = true
   else
     msg = "Skipping copying settings. Settings file already exists."
   end
@@ -85,6 +87,10 @@ if File.exists?(settings_location)
   end
 else
   log "No settings file found. Creating at #{settings_location}."
+  create_settings = true
+end
+
+if create_settings
   template settings_location do
     source node['ganeti_webmgr']['settings_template'] || "settings.py.erb"
     owner node['ganeti_webmgr']['owner']
@@ -92,7 +98,7 @@ else
     mode 0644
     variables node['ganeti_webmgr']['settings'].dup
     variables.update({
-      :node['ganeti_webmgr'] => node['ganeti_webmgr'],
+      :app => node['ganeti_webmgr'],
       :debug => node['ganeti_webmgr'].debug,
       :database => {
         :settings => node['ganeti_webmgr']['database'],
