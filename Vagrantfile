@@ -1,6 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+MOUNT_POINT = '/home/vagrant/ganeti_webmgr'
+
 Vagrant.configure("2") do |config|
   config.vm.hostname = "gwm"
   config.vm.box = "Berkshelf-CentOS-6.3-x86_64-minimal"
@@ -11,10 +13,9 @@ Vagrant.configure("2") do |config|
   config.omnibus.chef_version = :latest
 
   # Symlink our project for development purposes.
-  config.vm.synced_folder "~/projects/ganeti_webmgr", "/mnt/ganeti_webmgr"
+  config.vm.synced_folder "~/projects/ganeti_webmgr", MOUNT_POINT
 
   config.vm.provision :chef_solo do |chef|
-    # These could be causing chef to not run..
     chef.environments_path = "environments"
     chef.environment = "vagrant"
 
@@ -23,12 +24,8 @@ Vagrant.configure("2") do |config|
         :server_root_password => 'rootpass',
         :server_debian_password => 'debpass',
         :server_repl_password => 'replpass'
-      },
-      :ganeti_webmgr => {
-        'synced_folder' => '/mnt/ganeti_webmgr'
       }
     }
-
     chef.run_list = [
         "recipe[ganeti_webmgr::default]"
     ]
