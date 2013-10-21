@@ -7,7 +7,6 @@
 # All rights reserved - Do Not Redistribute
 #
 
-
 include_recipe "python"
 include_recipe "git"
 
@@ -35,6 +34,9 @@ db_pip_packages = case node['ganeti_webmgr']['database']['engine']
 when "mysql"
   include_recipe "mysql"
   'mysql-python'
+when "psycopg2"
+  include_recipe "postgresql"
+  'psycopg2'
 when "sqlite3"
   include_recipe "sqlite"
   ''
