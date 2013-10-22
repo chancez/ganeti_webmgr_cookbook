@@ -24,10 +24,18 @@ Vagrant.configure("2") do |config|
         :server_root_password => 'rootpass',
         :server_debian_password => 'debpass',
         :server_repl_password => 'replpass'
+      },
+      :ganeti_webmgr => {
+        :migrate => true,
+        :bootstrap_user => true,
+        :admin_username => 'vagrant',
+        :admin_password => 'vagrant'
       }
     }
     chef.run_list = [
-        "recipe[ganeti_webmgr::mysql]"
+        "recipe[ganeti_webmgr::mysql]",
+        # Uncomment if you want a test user created in GWM
+        # "recipe[ganeti_webmgr::bootstrap_user]"
     ]
   end
 end
