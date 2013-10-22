@@ -1,6 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+GWM_LOCATION = '~/projects/ganeti_webmgr/'
 MOUNT_POINT = '/home/vagrant/ganeti_webmgr'
 
 Vagrant.configure("2") do |config|
@@ -13,7 +14,7 @@ Vagrant.configure("2") do |config|
   config.omnibus.chef_version = :latest
 
   # Symlink our project for development purposes.
-  config.vm.synced_folder "~/projects/ganeti_webmgr", MOUNT_POINT
+  config.vm.synced_folder GWM_LOCATION, MOUNT_POINT
 
   config.vm.provision :chef_solo do |chef|
     chef.environments_path = "environments"
