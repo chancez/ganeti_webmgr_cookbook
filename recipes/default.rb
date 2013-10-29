@@ -10,7 +10,7 @@
 include_recipe "python"
 include_recipe "git"
 
-log "Installing system packages for #{node.ganeti_webmgr.name}"
+log "Installing system packages for ganeti_webmgr"
 node['ganeti_webmgr']['packages'].each do |pkg|
   package pkg do
     action :install
