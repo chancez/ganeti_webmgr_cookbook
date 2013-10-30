@@ -1,5 +1,5 @@
 name             'ganeti_webmgr'
-maintainer       'OSU Open Source Lab'
+maintainer       'Oregon State University'
 maintainer_email 'chance@osuosl.org'
 license          'All rights reserved'
 description      'Installs/Configures Ganeti Web Manager'
