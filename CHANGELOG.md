@@ -1,5 +1,11 @@
 # CHANGELOG for ganeti_webmgr
 
+## 0.2.0:
+
+* Bootstrap Django User
+* Completed README
+* Working with Mysql
+
 ## 0.1.2
 
 * Remove application_nginx
