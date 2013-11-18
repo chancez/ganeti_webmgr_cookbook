@@ -242,6 +242,16 @@ Attributes
   </tr>
 </table>
 
+#### ganeti_webmgr::hosts
+<table>
+  <tr>
+    <td><tt>['ganeti_webmgr']['hostsfile']</tt></td>
+    <td>Hash</td>
+    <td>A mapping of ips to hostnames to add to `/etc/hosts/`</td>
+    <td><tt>{}</tt></td>
+  </tr>
+</table>
+
 Usage
 -----
 #### ganeti_webmgr::default or ganeti_webmgr::mysql
@@ -282,6 +292,11 @@ recipes in `run_list`:
 }
 ```
 
+#### ganeti_webmgr::hosts
+
+This recipe is used to add hostname aliases in `/etc/hosts`.  In the vagrant
+environment, it defaults to adding hostnames to be used with [vagrant-
+ganeti](https://github.com/osuosl /vagrant-ganeti).
 
 License and Authors
 -------------------

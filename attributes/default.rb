@@ -40,4 +40,6 @@ default['ganeti_webmgr']['http_proxy']['host_name'] = node['fqdn']
 default['ganeti_webmgr']['http_proxy']['host_aliases'] = []
 default['ganeti_webmgr']['http_proxy']['listen_ports'] = [ 80 ]
 
+default['ganeti_webmgr']['hostsfile'] = {}
+
 default['nginx']['default_site_enabled'] = false

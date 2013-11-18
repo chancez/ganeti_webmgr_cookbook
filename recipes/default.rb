@@ -143,4 +143,5 @@ else
 end
 
 include_recipe "ganeti_webmgr::proxy"
+include_recipe "ganeti_webmgr::hosts"
 
