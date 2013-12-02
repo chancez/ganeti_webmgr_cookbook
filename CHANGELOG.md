@@ -1,5 +1,9 @@
 # CHANGELOG for ganeti_webmgr
 
+## 0.2.1:
+
+* Add support for /etc/hosts mappings
+
 ## 0.2.0:
 
 * Bootstrap Django User
