@@ -110,7 +110,8 @@ if create_settings
     variables node['ganeti_webmgr']['settings'].dup
     variables.update({
       :app => node['ganeti_webmgr'],
-      :debug => node['ganeti_webmgr'].debug,
+      :debug => node['ganeti_webmgr']['debug'],
+      :auth_proxy => node['ganeti_webmgr']['auth_proxy'],
       :database => {
         :settings => node['ganeti_webmgr']['database'],
         :host => node['ganeti_webmgr']['database']['host']

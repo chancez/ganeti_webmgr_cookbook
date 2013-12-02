@@ -1,5 +1,9 @@
 # CHANGELOG for ganeti_webmgr
 
+## 0.2.2:
+
+* Allow adjusting of VNC Auth proxy settings via attributes
+
 ## 0.2.1:
 
 * Add support for /etc/hosts mappings

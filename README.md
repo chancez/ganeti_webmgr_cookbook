@@ -206,6 +206,18 @@ Attributes
     <td>List of ports for the http proxy to listen on</td>
     <td><tt>[ 80 ]</tt></td>
   </tr>
+  <tr>
+    <td><tt>['ganeti_webmgr']['auth_proxy']['fqdn']</tt></td>
+    <td>String</td>
+    <td>Where the VNC Auth Proxy is running</td>
+    <td><tt>node.fqdn</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['ganeti_webmgr']['auth_proxy']['port']</tt></td>
+    <td>int</td>
+    <td>Port VNC Auth Proxy is running on</td>
+    <td><tt>8888</tt></td>
+  </tr>
 </table>
 
 #### ganeti_webmgr::bootstrap_user

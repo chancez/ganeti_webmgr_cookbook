@@ -42,4 +42,7 @@ default['ganeti_webmgr']['http_proxy']['listen_ports'] = [ 80 ]
 
 default['ganeti_webmgr']['hostsfile'] = {}
 
+default['ganeti_webmgr']['auth_proxy']['fqdn'] = node.fqdn
+default['ganeti_webmgr']['auth_proxy']['port'] = 8888
+
 default['nginx']['default_site_enabled'] = false
