@@ -46,7 +46,7 @@ when 'psycopg2'
   connection_info = postgresql_connection_info
 end
 
-log "Creating Database with name #{node.ganeti_webmgr.database.name}"
+log "Creating Database with name #{node['ganeti_webmgr']['database']['name']}"
 database node['ganeti_webmgr']['database']['name'] do
   provider db_provider
   connection connection_info

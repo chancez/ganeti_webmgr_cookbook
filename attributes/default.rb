@@ -17,7 +17,7 @@ default['ganeti_webmgr']['overwrite_settings'] = false
 default['ganeti_webmgr']['migrate'] = false
 default['ganeti_webmgr']['settings'] = {}
 default['ganeti_webmgr']['manage_file'] = "ganeti_webmgr/manage.py"
-default['ganeti_webmgr']['collectstatic_dir'] = "#{node.ganeti_webmgr.path}/collected_static"
+default['ganeti_webmgr']['collectstatic_dir'] = "#{node['ganeti_webmgr']['path']}/collected_static"
 
 default['ganeti_webmgr']['database']['engine'] = "sqlite3"
 # Load the DB Credentials using the databag as defaults.
@@ -42,7 +42,7 @@ default['ganeti_webmgr']['http_proxy']['listen_ports'] = [ 80 ]
 
 default['ganeti_webmgr']['hostsfile'] = {}
 
-default['ganeti_webmgr']['auth_proxy']['fqdn'] = node.fqdn
+default['ganeti_webmgr']['auth_proxy']['fqdn'] = node['fqdn']
 default['ganeti_webmgr']['auth_proxy']['port'] = 8888
 
 default['nginx']['default_site_enabled'] = false

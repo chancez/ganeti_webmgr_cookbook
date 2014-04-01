@@ -88,7 +88,7 @@ log "Creating settings file"
 if File.exists?(settings_location)
   if node['ganeti_webmgr']['overwrite_settings']
     msg = "Overwriting existing settings file because attribute "\
-          "'overwrite_settings' is set to #{node.ganeti_webmgr.overwrite_settings}."
+          "'overwrite_settings' is set to #{node['ganeti_webmgr']['overwrite_settings']}."
     create_settings = true
   else
     msg = "Skipping copying settings. Settings file already exists."
@@ -125,7 +125,7 @@ if node['ganeti_webmgr']['migrate']
   log "Running migrations"
   # Setup our commands to run manage.py with the virtualenv
   manage_loc = ::File.join(node['ganeti_webmgr']['path'], node['ganeti_webmgr']['manage_file'])
-  manage_cmd = "#{::File.join(venv, "bin", "python")} #{node.ganeti_webmgr.manage_file}"
+  manage_cmd = "#{::File.join(venv, "bin", "python")} #{node['ganeti_webmgr']['manage_file']}"
   syncdb_cmd = "#{manage_cmd} syncdb --noinput"
   migrate_cmd = "#{manage_cmd} migrate"
 
