@@ -19,6 +19,13 @@
 include_recipe "python"
 include_recipe "git"
 
+# Make sure the directory for GWM exists before we try to clone to it
+directory node['ganeti_webmgr']['path'] do
+  owner node['ganeti_webmgr']['owner']
+  group node['ganeti_webmgr']['group']
+  recursive true
+  action :create
+end
 
 no_clone = (node.chef_environment == "vagrant") &&
   ::File.directory?(node['ganeti_webmgr']['path'])
