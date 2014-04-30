@@ -20,7 +20,8 @@ include_recipe "python"
 include_recipe "git"
 
 
-no_clone = (node.chef_environment == "vagrant") && ::File.directory?(node['ganeti_webmgr']['path'])
+no_clone = (node.chef_environment == "vagrant") &&
+  ::File.directory?(node['ganeti_webmgr']['path'])
 
 log "Not cloning: Must be using Vagrant environment with shared folders" if no_clone
 
@@ -40,15 +41,18 @@ node['ganeti_webmgr']['packages'].each do |pkg|
 end
 
 venv = node['ganeti_webmgr']['virtualenv']
+venv_exists = !venv.to_s.empty?
 
-log "Creating Virtualenv"
-python_virtualenv venv do
-  owner node['ganeti_webmgr']['owner']
-  group node['ganeti_webmgr']['group']
-  action :create
-  only_if { venv }
+if venv_exists
+  log "Creating Virtualenv"
+  python_virtualenv venv do
+    owner node['ganeti_webmgr']['owner']
+    group node['ganeti_webmgr']['group']
+    action :create
+  end
+else
+  log "Virtualenv attribute not set. Not creating a virtualenv"
 end
-log "Virtualenv attribute not set. Not creating a virtualenv" if not venv
 
 # include proper recipes and the correct python db driver
 db_pip_packages = case node['ganeti_webmgr']['database']['engine']
@@ -136,9 +140,12 @@ include_recipe "ganeti_webmgr::database"
 
 # Migrations
 
+# Use global python interpreter or the virtualenv python if it exists
+python = venv_exists ? ::File.join(venv, "bin", "python") : "python"
+
 # Setup our commands to run manage.py with the virtualenv
 manage_loc = ::File.join(node['ganeti_webmgr']['path'], node['ganeti_webmgr']['manage_file'])
-manage_cmd = "#{::File.join(venv, "bin", "python")} #{node['ganeti_webmgr']['manage_file']}"
+manage_cmd = "#{python} #{node['ganeti_webmgr']['manage_file']}"
 syncdb_cmd = "#{manage_cmd} syncdb --noinput"
 migrate_cmd = "#{manage_cmd} migrate"
 
