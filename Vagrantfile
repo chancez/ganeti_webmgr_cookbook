@@ -1,6 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby tabstop=2 :
-require 'vagrant-openstack-plugin'
+#require 'vagrant-openstack-plugin'
 require 'vagrant-omnibus'
 require 'vagrant-berkshelf'
 

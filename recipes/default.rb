@@ -41,7 +41,7 @@ end
 # include proper recipes and install the db driver
 db_pip_packages = case node['ganeti_webmgr']['database']['engine']
 when "mysql"
-  include_recipe "mysql"
+  include_recipe "mysql::client"
   'mysql-python'
 when "psycopg2"
   include_recipe "postgresql"
@@ -119,6 +119,9 @@ if create_settings
     })
   end
 end
+
+# bootstrap DB to ensure our database exists and our db user exists
+include_recipe "ganeti_webmgr::database"
 
 # Migrations
 if node['ganeti_webmgr']['migrate']
