@@ -26,5 +26,9 @@ node.override['ganeti_webmgr']['database']['engine'] = 'mysql'
 # install mysql server
 include_recipe "mysql::server"
 
+directory node['mysql']['data_dir'] do
+  mode "0755"
+end
+
 # Run the rest of our setup for GWM
 include_recipe "ganeti_webmgr::default"
