@@ -1,0 +1,40 @@
+---
+driver:
+  name: vagrant
+  network:
+    - ["private_network", {ip: "33.33.33.100", adapter: 2}]
+
+provisioner:
+  name: chef_solo
+  environments_path: environments
+
+platforms:
+  - name: centos-6
+    driver_plugin: vagrant
+    driver_config:
+      box: centos-6-20140121
+      box_url: http://vagrant.osuosl.org/centos-6-20140121.box
+
+suites:
+  - name: default
+    provisioner:
+      solo_rb:
+        environment: vagrant
+    run_list:
+      - recipe[ganeti_webmgr::default]
+      - recipe[ganeti_webmgr::bootstrap_user]
+    attributes:
+      ganeti_webmgr:
+        migrate: true
+        database:
+          name: /home/vagrant/gwm.db
+  - name: mysql
+    provisioner:
+      solo_rb:
+        environment: vagrant
+    run_list:
+      - recipe[ganeti_webmgr::mysql]
+      - recipe[ganeti_webmgr::bootstrap_user]
+    attributes:
+      ganeti_webmgr:
+        migrate: true
