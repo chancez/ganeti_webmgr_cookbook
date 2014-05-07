@@ -14,7 +14,7 @@ For testing you need the following gems:
 
 If you use berkshelf, you also will want to install the `berkshelf` gem as well.
 
-To install dependencies run 'gem install' in the root of the directory.
+To install dependencies run 'bundle install' in the root of the directory.
 
 
 Attributes
