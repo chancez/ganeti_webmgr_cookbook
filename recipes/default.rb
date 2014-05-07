@@ -19,6 +19,27 @@
 include_recipe "python"
 include_recipe "git"
 
+# Make sure the directory for GWM exists before we try to clone to it
+directory node['ganeti_webmgr']['path'] do
+  owner node['ganeti_webmgr']['owner']
+  group node['ganeti_webmgr']['group']
+  recursive true
+  action :create
+end
+
+no_clone = (node.chef_environment == "vagrant") &&
+  ::File.directory?(node['ganeti_webmgr']['path'])
+
+log "Not cloning: Must be using Vagrant environment with shared folders" if no_clone
+
+git node['ganeti_webmgr']['path'] do
+  repository node['ganeti_webmgr']['repository']
+  revision node['ganeti_webmgr']['revision']
+  user node['ganeti_webmgr']['owner']
+  group node['ganeti_webmgr']['group']
+  not_if { no_clone }
+end
+
 log "Installing system packages for Ganeti Web Manager"
 node['ganeti_webmgr']['packages'].each do |pkg|
   package pkg do
@@ -27,7 +48,9 @@ node['ganeti_webmgr']['packages'].each do |pkg|
 end
 
 venv = node['ganeti_webmgr']['virtualenv']
-if venv
+venv_exists = !venv.to_s.empty?
+
+if venv_exists
   log "Creating Virtualenv"
   python_virtualenv venv do
     owner node['ganeti_webmgr']['owner']
@@ -38,47 +61,47 @@ else
   log "Virtualenv attribute not set. Not creating a virtualenv"
 end
 
-# include proper recipes and install the db driver
+# include proper recipes and the correct python db driver
 db_pip_packages = case node['ganeti_webmgr']['database']['engine']
 when "mysql"
-  include_recipe "mysql"
-  'mysql-python'
+  include_recipe "mysql::client"
+  ['mysql-python']
 when "psycopg2"
   include_recipe "postgresql"
-  'psycopg2'
+  ['psycopg2']
 when "sqlite3"
   include_recipe "sqlite"
-  ''
+  ['']
 else
   log "Node attribute ['ganeti_webmgr']['database']['engine']"\
       "not set. Defaulting to sqlite" do
     level :warn
   end
   include_recipe "sqlite"
-  ''
+  ['']
 end
 
-log "Installing pip packages"
-python_pkgs = node['ganeti_webmgr']['pip_packages'].dup
-# Add our db packages if they arent in the list already
-python_pkgs.push(db_pip_packages) unless python_pkgs.include?(db_pip_packages)
-python_pkgs.each do |pkg|
+
+# Install GWM as a python package
+python_pip node['ganeti_webmgr']['path'] do
+  virtualenv venv if venv
+  user node['ganeti_webmgr']['owner']
+  group node['ganeti_webmgr']['group']
+  action :install
+end
+
+
+# install the extra python dependencies (db drivers, and anything in attributes)
+log "Installing extra pip packages"
+
+# Merge the two lists of python package dependencies
+(node['ganeti_webmgr']['pip_packages'] | db_pip_packages).each do |pkg|
   python_pip pkg do
     virtualenv venv if venv
     user node['ganeti_webmgr']['owner']
     group node['ganeti_webmgr']['group']
     action :install
   end
-end
-
-requirements = ::File.join(node['ganeti_webmgr']['path'], node['ganeti_webmgr']['requirements'])
-log "Installing requirements.txt from #{requirements}"
-python_pip requirements do
-  virtualenv venv if venv
-  options "-r"
-  user node['ganeti_webmgr']['owner']
-  group node['ganeti_webmgr']['group']
-  action :install
 end
 
 # TODO: Needs testing
@@ -101,46 +124,47 @@ else
   create_settings = true
 end
 
-if create_settings
-  template settings_location do
-    source node['ganeti_webmgr']['settings_template'] || "settings.py.erb"
-    owner node['ganeti_webmgr']['owner']
-    group node['ganeti_webmgr']['group']
-    mode 0644
-    variables node['ganeti_webmgr']['settings'].dup
-    variables.update({
-      :app => node['ganeti_webmgr'],
-      :debug => node['ganeti_webmgr']['debug'],
-      :auth_proxy => node['ganeti_webmgr']['auth_proxy'],
-      :database => {
-        :settings => node['ganeti_webmgr']['database'],
-        :host => node['ganeti_webmgr']['database']['host']
-      }
-    })
-  end
+template settings_location do
+  source node['ganeti_webmgr']['settings_template'] || "settings.py.erb"
+  owner node['ganeti_webmgr']['owner']
+  group node['ganeti_webmgr']['group']
+  mode 0644
+  variables node['ganeti_webmgr']['settings'].dup
+  variables.update({
+    :app => node['ganeti_webmgr'],
+    :debug => node['ganeti_webmgr']['debug'],
+    :auth_proxy => node['ganeti_webmgr']['auth_proxy'],
+    :database => {
+      :settings => node['ganeti_webmgr']['database'],
+      :host => node['ganeti_webmgr']['database']['host']
+    }
+  })
+  only_if { create_settings }
 end
 
+# bootstrap DB to ensure our database exists and our db user exists
+include_recipe "ganeti_webmgr::database"
+
 # Migrations
-if node['ganeti_webmgr']['migrate']
-  log "Running migrations"
-  # Setup our commands to run manage.py with the virtualenv
-  manage_loc = ::File.join(node['ganeti_webmgr']['path'], node['ganeti_webmgr']['manage_file'])
-  manage_cmd = "#{::File.join(venv, "bin", "python")} #{node['ganeti_webmgr']['manage_file']}"
-  syncdb_cmd = "#{manage_cmd} syncdb --noinput"
-  migrate_cmd = "#{manage_cmd} migrate"
 
-  log "Migration Commands" do
-    level :debug
-    message "syncdb_cmd: #{syncdb_cmd}\nmigrate_cmd: #{migrate_cmd}"
-  end
+# Use global python interpreter or the virtualenv python if it exists
+python = venv_exists ? ::File.join(venv, "bin", "python") : "python"
 
-  execute "run_migrations" do
-    cwd node['ganeti_webmgr']['path']
-    command "#{syncdb_cmd} && #{migrate_cmd}"
-    only_if { ::File.exists?(manage_loc) }
-  end
-else
-  log "Skipping migrations because the migrate attribute is set to #{node.ganeti_webmgr.migrate}."
+# Setup our commands to run manage.py with the virtualenv
+manage_loc = ::File.join(node['ganeti_webmgr']['path'], node['ganeti_webmgr']['manage_file'])
+manage_cmd = "#{python} #{node['ganeti_webmgr']['manage_file']}"
+syncdb_cmd = "#{manage_cmd} syncdb --noinput"
+migrate_cmd = "#{manage_cmd} migrate"
+
+log "Migration Commands" do
+  level :debug
+  message "syncdb_cmd: #{syncdb_cmd}\nmigrate_cmd: #{migrate_cmd}"
+end
+
+execute "run_migrations" do
+  cwd node['ganeti_webmgr']['path']
+  command "#{syncdb_cmd} && #{migrate_cmd}"
+  only_if { node['ganeti_webmgr']['migrate'] && ::File.exists?(manage_loc) }
 end
 
 include_recipe "ganeti_webmgr::proxy"

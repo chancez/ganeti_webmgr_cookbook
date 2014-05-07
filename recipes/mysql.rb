@@ -16,10 +16,19 @@
 # See the License for the specific language governing permissions and
 
 
+# This Recipe should only be run in a development environment because
+# it installs MySQL locally, and adjusts a few MySQL settings.
+# Please use the default recipe in combination with the database recipe
+# if you need to create a database and user for GWM
+
 # Make sure our settings in Django are set correctly to mysql
 node.override['ganeti_webmgr']['database']['engine'] = 'mysql'
-# install mysql
-include_recipe "mysql::ruby"
+# install mysql server
 include_recipe "mysql::server"
-# bootstrap DB
-include_recipe "ganeti_webmgr::database"
+
+directory node['mysql']['data_dir'] do
+  mode "0755"
+end
+
+# Run the rest of our setup for GWM
+include_recipe "ganeti_webmgr::default"

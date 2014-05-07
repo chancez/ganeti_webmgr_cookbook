@@ -17,7 +17,9 @@
 
 
 # Recipe to do database agnostic boostrapping
-# Creates a database, and a database user for development
+# Creates a database, and a database user
+
+#TODO Retrieve username/password from databags
 
 db_host = node['ganeti_webmgr']['database']['host']
 db_port = node['ganeti_webmgr']['database']['port']
@@ -37,10 +39,14 @@ postgresql_connection_info = {
 
 case node['ganeti_webmgr']['database']['engine']
 when 'mysql'
+  include_recipe "mysql::client"
+  include_recipe "database::mysql"
   db_provider = Chef::Provider::Database::Mysql
   db_user_provider = Chef::Provider::Database::MysqlUser
   connection_info = mysql_connection_info
 when 'psycopg2'
+  include_recipe "postgresql"
+  include_recipe "database::postgres"
   db_provider = Chef::Provider::Database::Postgresql
   db_user_provider = Chef::Provider::Database::PostgresqlUser
   connection_info = postgresql_connection_info
@@ -72,4 +78,3 @@ database_user gwm_db_user do
   action :grant
 end
 
-include_recipe "ganeti_webmgr::default"
