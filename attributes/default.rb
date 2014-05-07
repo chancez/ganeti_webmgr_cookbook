@@ -27,7 +27,6 @@ default['ganeti_webmgr']['database']['password'] = nil
 default['ganeti_webmgr']['database']['host'] = nil
 default['ganeti_webmgr']['database']['port'] = nil
 
-default['ganeti_webmgr']['bootstrap_user'] = false
 default['ganeti_webmgr']['admin_username'] = nil
 default['ganeti_webmgr']['admin_password'] = nil
 default['ganeti_webmgr']['admin_email'] = nil

@@ -68,7 +68,6 @@ Vagrant.configure("2") do |config|
       },
       :ganeti_webmgr => {
         :migrate => true,
-        :bootstrap_user => true,
         :admin_username => 'vagrant',
         :admin_password => 'vagrant'
       }
