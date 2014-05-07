@@ -6,10 +6,16 @@ cookbook that allows you to deploy GWM easily in any environment.
 
 Requirements
 ------------
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
 
-- `vagrant-berkshelf` - If deploying to vagrant
-- `berkshelf` - If deploying any otherway
+For testing you need the following gems:
+
+- `test-kitchen`
+- `kitchen-vagrant`
+
+If you use berkshelf, you also will want to install the `berkshelf` gem as well.
+
+To install dependencies run 'gem install' in the root of the directory.
+
 
 Attributes
 ----------
@@ -222,12 +228,6 @@ Attributes
 
 #### ganeti_webmgr::bootstrap_user
 <table>
-  <tr>
-    <td><tt>['ganeti_webmgr']['bootstrap_user']</tt></td>
-    <td>boolean</td>
-    <td>**Do not use in production.** Used for boostrapping a Django superuser after deployment.</td>
-    <td><tt>false</tt></td>
-  </tr>
   <tr>
     <td><tt>['ganeti_webmgr']['admin_username']</tt></td>
     <td>string</td>
