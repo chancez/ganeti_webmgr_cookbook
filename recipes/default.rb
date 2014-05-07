@@ -61,8 +61,10 @@ else
   log "Virtualenv attribute not set. Not creating a virtualenv"
 end
 
+db_engine = node['ganeti_webmgr']['database']['engine']
+
 # include proper recipes and the correct python db driver
-db_pip_packages = case node['ganeti_webmgr']['database']['engine']
+db_pip_packages = case db_engine
 when "mysql"
   include_recipe "mysql::client"
   ['mysql-python']
@@ -143,7 +145,8 @@ template settings_location do
 end
 
 # bootstrap DB to ensure our database exists and our db user exists
-include_recipe "ganeti_webmgr::database"
+include_recipe "ganeti_webmgr::database" unless db_engine.to_s.empty? or
+  db_engine == 'sqlite3'
 
 # Migrations
 
@@ -162,6 +165,8 @@ log "Migration Commands" do
 end
 
 execute "run_migrations" do
+  user node['ganeti_webmgr']['owner']
+  group node['ganeti_webmgr']['group']
   cwd node['ganeti_webmgr']['path']
   command "#{syncdb_cmd} && #{migrate_cmd}"
   only_if { node['ganeti_webmgr']['migrate'] && ::File.exists?(manage_loc) }
@@ -169,4 +174,3 @@ end
 
 include_recipe "ganeti_webmgr::proxy"
 include_recipe "ganeti_webmgr::hosts"
-

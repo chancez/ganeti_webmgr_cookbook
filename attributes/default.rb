@@ -1,4 +1,4 @@
-default['ganeti_webmgr']['path'] = "/var/lib/django/ganeti_webmgr"
+default['ganeti_webmgr']['path'] = path = "/var/lib/django/ganeti_webmgr"
 default['ganeti_webmgr']['owner'] = nil
 default['ganeti_webmgr']['group'] = nil
 
@@ -21,7 +21,7 @@ default['ganeti_webmgr']['collectstatic_dir'] = "#{node['ganeti_webmgr']['path']
 
 default['ganeti_webmgr']['database']['engine'] = "sqlite3"
 # Load the DB Credentials using the databag as defaults.
-default['ganeti_webmgr']['database']['name'] = nil
+default['ganeti_webmgr']['database']['name'] = ::File.join(path, 'ganeti.db')
 default['ganeti_webmgr']['database']['user'] = nil
 default['ganeti_webmgr']['database']['password'] = nil
 default['ganeti_webmgr']['database']['host'] = nil
