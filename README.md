@@ -213,7 +213,7 @@ Attributes
     <td><tt>[ 80 ]</tt></td>
   </tr>
   <tr>
-    <td><tt>['ganeti_webmgr']['auth_proxy']['fqdn']</tt></td>
+    <td><tt>['ganeti_webmgr']['auth_proxy']['host']</tt></td>
     <td>String</td>
     <td>Where the VNC Auth Proxy is running</td>
     <td><tt>node.fqdn</tt></td>
