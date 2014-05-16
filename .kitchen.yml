@@ -15,6 +15,16 @@ platforms:
       box: centos-6-20140121
       box_url: http://vagrant.osuosl.org/centos-6-20140121.box
 
+  - name: ubuntu-12.04
+    driver_plugin: vagrant
+    driver_config:
+      box: ubuntu-12.04-20140121
+      box_url: http://vagrant.osuosl.org/ubuntu-12.04-20140121.box
+    run_list:
+      - recipe[apt::default]
+
+
+
 suites:
   - name: default
     provisioner:
@@ -28,6 +38,7 @@ suites:
         migrate: true
         database:
           name: /home/vagrant/gwm.db
+
   - name: mysql
     provisioner:
       solo_rb:
