@@ -5,7 +5,16 @@ default['ganeti_webmgr']['group'] = nil
 default['ganeti_webmgr']['repository'] = "https://github.com/osuosl/ganeti_webmgr"
 default['ganeti_webmgr']['revision'] = "develop"
 
-default['ganeti_webmgr']['packages'] = []
+case node['platform']
+when 'redhat', 'centos', 'fedora'
+  default['ganeti_webmgr']['packages'] = ['libffi-devel']
+when 'debian', 'ubuntu'
+  default['ganeti_webmgr']['packages'] = ['libffi-dev']
+else
+  default['ganeti_webmgr']['packages'] = []
+end
+
+
 default['ganeti_webmgr']['pip_packages'] = []
 default['ganeti_webmgr']['virtualenv'] = nil
 
@@ -17,7 +26,7 @@ default['ganeti_webmgr']['overwrite_settings'] = false
 default['ganeti_webmgr']['migrate'] = false
 default['ganeti_webmgr']['settings'] = {}
 default['ganeti_webmgr']['manage_file'] = "ganeti_webmgr/manage.py"
-default['ganeti_webmgr']['collectstatic_dir'] = "#{node['ganeti_webmgr']['path']}/collected_static"
+default['ganeti_webmgr']['collectstatic_dir'] = ::File.join(path, 'collected_static')
 
 default['ganeti_webmgr']['database']['engine'] = "sqlite3"
 # Load the DB Credentials using the databag as defaults.
