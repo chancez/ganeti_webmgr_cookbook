@@ -4,7 +4,7 @@ maintainer_email 'chance@osuosl.org'
 license          'All rights reserved'
 description      'Installs/Configures Ganeti Web Manager'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.3.2'
+version          '0.3.3'
 depends          'python'
 depends          'git'
 depends          'supervisor'

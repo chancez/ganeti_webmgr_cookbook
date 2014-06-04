@@ -27,7 +27,7 @@ directory node['ganeti_webmgr']['path'] do
   action :create
 end
 
-no_clone = (node.chef_environment == "vagrant" &&
+no_clone = node.chef_environment == "vagrant" &&
   ::File.directory?(::File.join(node['ganeti_webmgr']['path'], '.git'))
 
 git node['ganeti_webmgr']['path'] do
