@@ -27,11 +27,15 @@ directory node['ganeti_webmgr']['path'] do
   action :create
 end
 
+no_clone = (node.chef_environment == "vagrant" &&
+  ::File.directory?(::File.join(node['ganeti_webmgr']['path'], '.git'))
+
 git node['ganeti_webmgr']['path'] do
   repository node['ganeti_webmgr']['repository']
   revision node['ganeti_webmgr']['revision']
   user node['ganeti_webmgr']['owner']
   group node['ganeti_webmgr']['group']
+  not_if { no_clone }
 end
 
 log "Installing system packages for Ganeti Web Manager"
