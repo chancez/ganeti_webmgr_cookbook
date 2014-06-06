@@ -37,14 +37,14 @@ postgresql_connection_info = {
   :password => node['postgresql']['password']['postgres']
 }
 
-case node['ganeti_webmgr']['database']['engine']
+case node['ganeti_webmgr']['database']['engine'].split('.').last
 when 'mysql'
   include_recipe "mysql::client"
   include_recipe "database::mysql"
   db_provider = Chef::Provider::Database::Mysql
   db_user_provider = Chef::Provider::Database::MysqlUser
   connection_info = mysql_connection_info
-when 'psycopg2'
+when 'psycopg2', 'postgresql_psycopg2'
   include_recipe "postgresql"
   include_recipe "database::postgres"
   db_provider = Chef::Provider::Database::Postgresql

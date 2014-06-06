@@ -35,8 +35,8 @@ suites:
       - recipe[ganeti_webmgr::bootstrap_user]
     attributes:
       ganeti_webmgr:
-        migrate: true
         database:
+          engine: django.db.backends.sqlite3
           name: /home/vagrant/gwm.db
 
   - name: mysql
@@ -45,7 +45,7 @@ suites:
         environment: vagrant
     run_list:
       - recipe[ganeti_webmgr::mysql]
-      - recipe[ganeti_webmgr::bootstrap_user]
+      # - recipe[ganeti_webmgr::bootstrap_user]
     attributes:
       ganeti_webmgr:
-        migrate: true
+        revision: bug/16269

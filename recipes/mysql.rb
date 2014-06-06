@@ -22,7 +22,7 @@
 # if you need to create a database and user for GWM
 
 # Make sure our settings in Django are set correctly to mysql
-node.override['ganeti_webmgr']['database']['engine'] = 'mysql'
+node.override['ganeti_webmgr']['database']['engine'] = 'django.db.backends.mysql'
 # install mysql server
 include_recipe "mysql::server"
 
@@ -31,4 +31,5 @@ directory node['mysql']['data_dir'] do
 end
 
 # Run the rest of our setup for GWM
+include_recipe "ganeti_webmgr::database"
 include_recipe "ganeti_webmgr::default"
