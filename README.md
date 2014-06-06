@@ -31,19 +31,19 @@ Attributes
   <tr>
     <td><tt>['ganeti_webmgr']['path']</tt></td>
     <td>String</td>
-    <td>Full path to the location you want GWM at</td>
-    <td><tt>/var/lib/django/ganeti_webmgr</tt></td>
+    <td>Full path to the location GWM gets cloned. Note: This is not where it is installed.</td>
+    <td><tt>/opt/ganeti_webmgr_src</tt></td>
   </tr>
   <tr>
-    <td><tt>['ganeti_webmgr']['owner']</tt></td>
+    <td><tt>['ganeti_webmgr']['user']</tt></td>
     <td>String</td>
-    <td>Owner of the project and its virtual environment</td>
+    <td>User to change to when running commands</td>
     <td><tt>nil</tt></td>
   </tr>
   <tr>
     <td><tt>['ganeti_webmgr']['group']</tt></td>
     <td>String</td>
-    <td>Group of the project and its virtualenv</td>
+    <td>Group to change to when running commands</td>
     <td><tt>nil</tt></td>
   </tr>
   <tr>
@@ -65,45 +65,21 @@ Attributes
     <td><tt>[]</tt></td>
   </tr>
   <tr>
-    <td><tt>['ganeti_webmgr']['pip_packages']</tt></td>
-    <td>Array of strings</td>
-    <td>List of python packages to install before setting up GWM</td>
-    <td><tt>[]</tt></td>
+    <td><tt>['ganeti_webmgr']['install_dir']</tt></td>
+    <td>String</td>
+    <td>Where to actually install GWM to. This is the location setup.sh will create GWM's virtualenv</td>
+    <td><tt>/opt/ganeti_webmgr</tt></td>
   </tr>
   <tr>
-    <td><tt>['ganeti_webmgr']['virtualenv']</tt></td>
+    <td><tt>['ganeti_webmgr']['config_dir']</tt></td>
     <td>String</td>
-    <td>Full path to where you want GWM to store its virtual environment</td>
-    <td><tt>nil</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['requirements']</tt></td>
-    <td>String</td>
-    <td>Relative path from ['ganeti_webmgr']['path'] to the requirements file containing pip packages to install GWM</td>
-    <td><tt>nil</tt></td>
+    <td>Where gwm's config directory goes. This is the directory config.yml will be put into.</td>
+    <td><tt>/opt/ganeti_webmgr/config</tt></td>
   </tr>
   <tr>
     <td><tt>['ganeti_webmgr']['debug']</tt></td>
     <td>Boolean</td>
     <td>Whether or not to set the Django debug mode on or off</td>
-    <td><tt>false</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['local_settings_file']</tt></td>
-    <td>String</td>
-    <td>Relative path from ['ganeti_webmgr']['path'] to Ganeti Web Managers settings file.</td>
-    <td><tt>ganeti_webmgr/ganeti_web/settings/settings.py</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['settings_template']</tt></td>
-    <td>String</td>
-    <td>Path to settings.py chef template.</td>
-    <td><tt>settings.py.erb</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['overwrite_settings']</tt></td>
-    <td>Boolean</td>
-    <td>Overwrite existing settings files if it exists when deploying</td>
     <td><tt>false</tt></td>
   </tr>
   <tr>
@@ -113,22 +89,16 @@ Attributes
     <td><tt>false</tt></td>
   </tr>
   <tr>
-    <td><tt>['ganeti_webmgr']['settings']</tt></td>
-    <td>Hash</td>
-    <td>Additional settings to pass to ['ganeti_webmgr']['settings_template']</td>
-    <td><tt>{}</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['manage_file']</tt></td>
-    <td>String</td>
-    <td>Relative path from ['ganeti_webmgr']['path'] to the GWM manage.py file</td>
-    <td><tt>ganeti_webmgr/manage.py</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['collectstatic_dir']</tt></td>
+    <td><tt>['ganeti_webmgr']['static_root']</tt></td>
     <td>String</td>
     <td>Absolute path to where you want staticfiles to be collected to</td>
-    <td><tt>['ganeti_webmgr']['path']/collected_static</tt></td>
+    <td><tt>/opt/ganeti_webmgr/collected_static</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['ganeti_webmgr']['static_url']</tt></td>
+    <td>String</td>
+    <td>Url to find GWM's static files at.</td>
+    <td><tt>/static</tt></td>
   </tr>
   <tr>
     <td><tt>['ganeti_webmgr']['database']['engine']</tt></td>
@@ -166,63 +136,29 @@ Attributes
     <td>See https://docs.djangoproject.com/en/1.4/ref/settings/#databases</td>
     <td><tt>nil</tt></td>
   </tr>
-</table>
-
-#### ganeti_webmgr::proxy
-<table>
   <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['host']</tt></td>
+    <td><tt>['ganeti_webmgr']['haystack_whoosh_path']</tt></td>
     <td>String</td>
-    <td>Host GWM is deployed on, for configuring http proxy</td>
-    <td><tt>node['fqdn']</tt></td>
+    <td>Where to put the search index files</td>
+    <td><tt>/opt/ganeti_webmgr/whoosh_index</tt></td>
   </tr>
   <tr>
-    <td><tt>['ganeti_webmgr']['port']</tt></td>
-    <td>Integer</td>
-    <td>Port GWM is listening on, for configuring http proxy</td>
-    <td><tt>8000</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['http_proxy']['variant']</tt></td>
+    <td><tt>['ganeti_webmgr']['vnc_proxy']</tt></td>
     <td>String</td>
-    <td>Used to specify what to use as an http_proxy. Valid options are "nginx"</td>
-    <td><tt>nil</tt></td>
+    <td>The host:port pair where to access the VNCAuthProxy</td>
+    <td><tt>node['fqdn']:8888</tt></td>
   </tr>
   <tr>
-    <td><tt>['ganeti_webmgr']['http_proxy']['host_name']</tt></td>
+    <td><tt>['ganeti_webmgr']['secret_key']</tt></td>
     <td>String</td>
-    <td>Hostname of the http proxy</td>
-    <td><tt>node['fqdn']</tt></td>
+    <td>The SECRET_KEY for GWM</td>
+    <td><tt>No Default, left unset.</tt></td>
   </tr>
   <tr>
-    <td><tt>['ganeti_webmgr']['http_proxy']['host_aliases']</tt></td>
-    <td>List</td>
-    <td>List of hostname aliases</td>
-    <td><tt>[]</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['http_proxy']['listen_ports']</tt></td>
-    <td>List of integers</td>
-    <td>List of ports for the http proxy to listen on</td>
-    <td><tt>[ 80 ]</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['auth_proxy']['host']</tt></td>
+    <td><tt>['ganeti_webmgr']['web_mgr_api_key']</tt></td>
     <td>String</td>
-    <td>Where the VNC Auth Proxy is running</td>
-    <td><tt>node.fqdn</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['auth_proxy']['port']</tt></td>
-    <td>int</td>
-    <td>Port VNC Auth Proxy is running on</td>
-    <td><tt>8888</tt></td>
+    <td>The WEB_MGR_API_KEY for GWM</td>
+    <td><tt>No Default, left unset.</tt></td>
   </tr>
 </table>
 

@@ -106,3 +106,7 @@ RAPI_CONNECT_TIMEOUT: 3
 <% if @app['secret_key'] %>
 SECRET_KEY: <%= @app['secret_key'] %>
 <% end %>
+
+<% if @app['web_mgr_api_key'] %>
+WEB_MGR_API_KEY: <%= @app['web_mgr_api_key'] %>
+<% end %>
