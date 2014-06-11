@@ -33,6 +33,7 @@ suites:
     run_list:
       - recipe[ganeti_webmgr::default]
       - recipe[ganeti_webmgr::bootstrap_user]
+      - recipe[ganeti_webmgr::apache]
     attributes:
       ganeti_webmgr:
         database:
@@ -45,7 +46,4 @@ suites:
         environment: vagrant
     run_list:
       - recipe[ganeti_webmgr::mysql]
-      # - recipe[ganeti_webmgr::bootstrap_user]
-    attributes:
-      ganeti_webmgr:
-        revision: bug/16269
+      - recipe[ganeti_webmgr::apache]

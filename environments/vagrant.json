@@ -8,13 +8,7 @@
      "allow_remote_root": true
    },
    "ganeti_webmgr": {
-     "path": "/home/vagrant/ganeti_webmgr",
-     "install_dir": "/home/vagrant/gwm_install",
-     "config_dir": "/home/vagrant/gwm_install/config",
-     "haystack_whoosh_path": "/home/vagrant/gwm_install/whoosh_index",
-     "static_root": "/home/vagrant/gwm_install/collected_static",
-     "user": "vagrant",
-     "group": "vagrant",
+     "revision": "develop",
      "debug": true,
      "migrate": true,
      "database": {
@@ -25,6 +19,9 @@
        "port": 3306
      },
      "secret_key": "0123456789123456",
+     "apache": {
+       "server_aliases": ["localhost"]
+     },
      "hostsfile": {
        "33.33.33.10": "ganeti.example.org",
        "33.33.33.11": "node1.example.org",
