@@ -8,7 +8,7 @@ DATABASES:
         ENGINE: <%= @app["database"]["engine"] %>
         NAME: <%= @app["database"]["name"] %>
         USER: <%= @app["database"]["user"] %>
-        PASSWORD: <%= @app["database"]["password"] %>
+        PASSWORD: <%= @db_pass %>
         HOST: <%= @app["database"]["host"] %>
         PORT: <%= @app["database"]["port"] %>
 ##### End Database Configuration #####
@@ -103,10 +103,10 @@ VNC_PROXY: "<%= @app['vnc_proxy'] %>"
 # ganeti cluster.
 RAPI_CONNECT_TIMEOUT: 3
 
-<% if @app['secret_key'] %>
-SECRET_KEY: <%= @app['secret_key'] %>
+<% if @secret_key %>
+SECRET_KEY: <%= @secret_key %>
 <% end %>
 
-<% if @app['web_mgr_api_key'] %>
-WEB_MGR_API_KEY: <%= @app['web_mgr_api_key'] %>
+<% if @web_mgr_api_key %>
+WEB_MGR_API_KEY: <%= @web_mgr_api_key %>
 <% end %>

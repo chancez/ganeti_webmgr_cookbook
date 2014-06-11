@@ -20,21 +20,32 @@ venv_bin = ::File.join(venv, 'bin')
 python = ::File.join(venv_bin, 'python')
 django_admin = ::File.join(venv_bin, 'django-admin.py')
 
-username = node['ganeti_webmgr']['admin_username'] || 'admin'
-password = node['ganeti_webmgr']['admin_password'] || 'password'
-email = node['ganeti_webmgr']['admin_email'] || 'admin@example.com'
-
 env = {
   "GWM_CONFIG_DIR" => "#{node['ganeti_webmgr']['config_dir']}" ,
   "DJANGO_SETTINGS_MODULE" => "ganeti_webmgr.ganeti_web.settings"
 }
 
-execute "bootstrap_superuser" do
-  command <<-EOS
-  #{django_admin} createsuperuser --noinput --username=#{username} --email #{email}
-  #{python} -c \"from django.contrib.auth.models import User;u=User.objects.get(username='#{username}');u.set_password('#{password}');u.save();\"
-  EOS
-  user node['ganeti_webmgr']['user']
-  group node['ganeti_webmgr']['group']
-  environment env
+# Use the attributes to bootstrap users if set, otherwise use databag users
+users = node['ganeti_webmgr']['superusers']
+unless users.any?
+  passwords = Chef::EncryptedDataBagItem.load("ganeti_webmgr", "passwords")
+  users = passwords['superusers'] || []
+end
+
+users.each do |user|
+  username = user['username']
+  email = user['email']
+  password = user['password']
+
+  log "Creating django superuser #{username}"
+
+  execute "bootstrap_superuser" do
+    command <<-EOS
+    #{django_admin} createsuperuser --noinput --username=#{username} --email #{email}
+    #{python} -c \"from django.contrib.auth.models import User;u=User.objects.get(username='#{username}');u.set_password('#{password}');u.save();\"
+    EOS
+    user node['ganeti_webmgr']['user']
+    group node['ganeti_webmgr']['group']
+    environment env
+  end
 end

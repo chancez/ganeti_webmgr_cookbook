@@ -19,22 +19,29 @@
 # Recipe to do database agnostic boostrapping
 # Creates a database, and a database user
 
-#TODO Retrieve username/password from databags
+passwords = Chef::EncryptedDataBagItem.load("ganeti_webmgr", "passwords")
 
 db_host = node['ganeti_webmgr']['database']['host']
 db_port = node['ganeti_webmgr']['database']['port']
+
+db_user = node['ganeti_webmgr']['db_server']['user']
+db_password = node['ganeti_webmgr']['db_server']['password'] || passwords['db_server']['password']
+
+gwm_db_user = node['ganeti_webmgr']['database']['user']
+gwm_db_pass = node['ganeti_webmgr']['database']['password'] ||  passwords['db_password']
+
 mysql_connection_info = {
     :host => db_host,
     :port => db_port,
-    :username => 'root',
-    :password => node['mysql']['server_root_password']
+    :username => db_user || 'root',
+    :password => db_password
 }
 
 # postgres example not tested:
 postgresql_connection_info = {
   :host => db_host,
-  :username => 'postgres',
-  :password => node['postgresql']['password']['postgres']
+  :username => db_user || 'postgres',
+  :password => db_password
 }
 
 case node['ganeti_webmgr']['database']['engine'].split('.').last
@@ -60,12 +67,11 @@ database node['ganeti_webmgr']['database']['name'] do
 end
 
 # Create our user
-gwm_db_user = node['ganeti_webmgr']['database']['user']
 database_user gwm_db_user do
   provider db_provider
   connection connection_info
   database_name node['ganeti_webmgr']['database']['name']
-  password node['ganeti_webmgr']['database']['password']
+  password gwm_db_pass
   action :create
 end
 

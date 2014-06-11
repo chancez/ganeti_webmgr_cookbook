@@ -33,9 +33,7 @@ default['ganeti_webmgr']['database']['password'] = nil
 default['ganeti_webmgr']['database']['host'] = nil
 default['ganeti_webmgr']['database']['port'] = nil
 
-default['ganeti_webmgr']['admin_username'] = nil
-default['ganeti_webmgr']['admin_password'] = nil
-default['ganeti_webmgr']['admin_email'] = nil
+default['ganeti_webmgr']['superusers'] = []
 
 default['ganeti_webmgr']['host'] = node['fqdn']
 default['ganeti_webmgr']['port'] = 8000
@@ -52,3 +50,12 @@ default['ganeti_webmgr']['apache']['server_aliases'] = [node['fqdn']]
 
 default['ganeti_webmgr']['apache']['processes'] = 4
 default['ganeti_webmgr']['apache']['threads'] = 1
+
+# secrets
+
+default['ganeti_webmgr']['secret_key'] = nil
+default['ganeti_webmgr']['web_mgr_api_key'] = nil
+
+default['ganeti_webmgr']['db_server']['user'] = nil
+default['ganeti_webmgr']['db_server']['password'] = nil
+
