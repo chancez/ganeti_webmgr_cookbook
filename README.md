@@ -152,41 +152,23 @@ Attributes
     <td><tt>['ganeti_webmgr']['secret_key']</tt></td>
     <td>String</td>
     <td>The SECRET_KEY for GWM</td>
-    <td><tt>No Default, left unset.</tt></td>
+    <td><tt>nil</tt></td>
   </tr>
   <tr>
     <td><tt>['ganeti_webmgr']['web_mgr_api_key']</tt></td>
     <td>String</td>
     <td>The WEB_MGR_API_KEY for GWM</td>
-    <td><tt>No Default, left unset.</tt></td>
+    <td><tt>nil</tt></td>
   </tr>
 </table>
 
 #### ganeti_webmgr::bootstrap_user
 <table>
   <tr>
-    <td><tt>['ganeti_webmgr']['admin_username']</tt></td>
-    <td>string</td>
-    <td>**Do not use in production.** Username of Django superuser to boostrap after deployment.</td>
-    <td><tt>nil</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['admin_password']</tt></td>
-    <td>string</td>
-    <td>**Do not use in production.** Password of Django superuser to boostrap after deployment.</td>
-    <td><tt>nil</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['admin_email']</tt></td>
-    <td>string</td>
-    <td>**Do not use in production.** Email of Django superuser to boostrap after deployment.</td>
-    <td><tt>nil</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['admin_email']</tt></td>
-    <td>string</td>
-    <td>**Do not use in production.** Email of Django superuser to boostrap after deployment.</td>
-    <td><tt>nil</tt></td>
+    <td><tt>['ganeti_webmgr']['superusers']</tt></td>
+    <td>List</td>
+    <td>Takes a list of hashes containing the following keys: username, email and password</td>
+    <td><tt>[]</tt></td>
   </tr>
 </table>
 
@@ -200,12 +182,63 @@ Attributes
   </tr>
 </table>
 
+
+#### ganeti_webmgr::apache
+<table>
+  <tr>
+    <td><tt>['ganeti_webmgr']['apache']['application_name']</tt></td>
+    <td>String</td>
+    <td>Name of vhost file. `.conf` is added to the end automatically.</td>
+    <td><tt>ganeti_webmgr</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['ganeti_webmgr']['apache']['server_name']</tt></td>
+    <td>String</td>
+    <td>Servername for apache vhost</td>
+    <td><tt>node['hostname']</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['ganeti_webmgr']['apache']['server_aliases']</tt></td>
+    <td>List</td>
+    <td>A list of server_alises for the apache vhost</td>
+    <td><tt>[node['fqdn']]</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['ganeti_webmgr']['apache']['processes']</tt></td>
+    <td>Int</td>
+    <td>Number of WSGI processes to run for GWM.</td>
+    <td><tt>4</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['ganeti_webmgr']['apache']['Threads']</tt></td>
+    <td>Int</td>
+    <td>Number of threads for each WSGI process in GWM.</td>
+    <td><tt>1</tt></td>
+  </tr>
+</table>
+
+#### ganeti_webmgr::database
+<table>
+  <tr>
+    <td><tt>['ganeti_webmgr']['db_server']['user']</tt></td>
+    <td>String</td>
+    <td>User to login to the database server as when creating a database for GWM.</td>
+    <td><tt>nil</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['ganeti_webmgr']['db_server']['password']</tt></td>
+    <td>String</td>
+    <td>Password to login to the database server as when creating a database for GWM.</td>
+    <td><tt>nil</tt></td>
+  </tr>
+</table>
+
 Usage
 -----
 #### ganeti_webmgr::default or ganeti_webmgr::mysql
 Just include `ganeti_webmgr` in your node's `run_list`.
-If you want to have it deploy with mysql and bootstrap a database for you use
-`ganeti_webmgr::mysql`:
+If you want to have it deploy, install mysql server and bootstrap a database for
+you use `ganeti_webmgr::mysql`:
 
 ```json
 {
@@ -226,6 +259,11 @@ or
   ]
 }
 ```
+
+Only use the mysql recipe if you want mysql server installed. If you simply want
+to use GWM with a different mysql server, use the `ganeti_webmgr::default`
+recipe and set the appropriate attributes.
+
 #### ganeti_webmgr::bootstrap_user
 Just include `ganeti_webmgr::bootstrap_user` in addition to one of the previous
 recipes in `run_list`:
@@ -240,11 +278,29 @@ recipes in `run_list`:
 }
 ```
 
+Then set the attribute `node['ganeti_webmgr']['superusers']` to something like
+this:
+
+````json
+[
+  {
+    "username": "foo",
+    "password": "bar",
+    "email": "foo@bar.com"
+  },
+  {
+    "username": "admin",
+    "password": "secret",
+    "email": "admin@bar.com"
+  }
+]
+````
+
 #### ganeti_webmgr::hosts
 
 This recipe is used to add hostname aliases in `/etc/hosts`.  In the vagrant
 environment, it defaults to adding hostnames to be used with [vagrant-
-ganeti](https://github.com/osuosl /vagrant-ganeti).
+ganeti](https://github.com/osuosl/vagrant-ganeti).
 
 License and Authors
 -------------------
