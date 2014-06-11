@@ -328,6 +328,9 @@ databags:
   `password`, and `email`. Each item in the list will be added as a superuser to
   GWM.
 
+**Note**: These databag values are only used if the attributes for them **are
+not set**
+
 Here's an example databag in unencrypted form for the vagrant environment:
 
 ````json
