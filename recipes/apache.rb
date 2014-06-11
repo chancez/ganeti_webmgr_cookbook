@@ -1,13 +1,21 @@
 include_recipe "apache2::default"
 include_recipe "apache2::mod_wsgi"
 
+gwm = node['ganeti_webmgr']
+
 env = {
-  "GWM_CONFIG_DIR" => "#{node['ganeti_webmgr']['config_dir']}" ,
+  "GWM_CONFIG_DIR" => "#{gwm['config_dir']}" ,
   "DJANGO_SETTINGS_MODULE" => "ganeti_webmgr.ganeti_web.settings"
 }
 
-gwm = node['ganeti_webmgr']
-python_path = ::File.join(gwm['install_dir'], 'lib', 'python2.6', 'site-packages')
+python_version = node['languages']['python']['version']
+# virtualenvs only have the major version
+# (ie: 2.6, not 2.6.6)
+version = python_version.split(".")
+version = version[0] + "." + version[1]
+python_version = "python#{version}"
+
+python_path = ::File.join(gwm['install_dir'], 'lib', python_version, 'site-packages')
 wsgi_path = ::File.join(python_path, 'ganeti_webmgr', 'ganeti_web', 'wsgi.py')
 
 venv = gwm['install_dir']
