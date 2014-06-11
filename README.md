@@ -302,6 +302,54 @@ This recipe is used to add hostname aliases in `/etc/hosts`.  In the vagrant
 environment, it defaults to adding hostnames to be used with [vagrant-
 ganeti](https://github.com/osuosl/vagrant-ganeti).
 
+Databags
+--------
+
+The `ganeti_webmgr` cookbook supports loading passwords and secrets using either
+attributes or through chef's encrypted databags.
+
+Currently the cookbook expects all secrets to be in a single databag called
+`ganeti_webmgr`, and in an item called `passwords`.
+
+Here are the list of values according to their purpose if you wish to use
+databags:
+
+* `db_password`: This is used with the `ganeti_webmgr::database` recipe. This is
+  what the recipe will set as the password for the user specified in
+  `node['ganeti_webmgr']['database']['user']` on the database being created.
+* `db_server`: This is a hash which should contain the key `password` and
+  optionally `user`, which are the actual credentials needed to login to the
+  database application (mysql/postgres) to add a user, and create a database
+  for that user. Essentially, this contains the credentials for a db user
+  with create database permissions.
+* `secret_key` and `web_mgr_api_key`: Each of these correspond directly to the
+  settings in GWM's config.yml.
+* `superusers`: This should be a list of hashes containing the keys `username`,
+  `password`, and `email`. Each item in the list will be added as a superuser to
+  GWM.
+
+Here's an example databag in unencrypted form for the vagrant environment:
+
+````json
+{
+    "id": "passwords",
+    "db_password": "vagrant",
+    "db_server": {
+        "password": "rootpass"
+    },
+    "secret_key": "eo6uuJeegah9vieHahnahriv5noivahT",
+    "web_mgr_api_key": "quae5aethaehahCeiquaenahjaice3ei",
+    "superusers": [
+        {
+            "username": "admin",
+            "password": "password",
+            "email": "admin@example.org"
+        }
+    ]
+}
+````
+
+
 License and Authors
 -------------------
 Authors: Chance Zibolski <chance@osuosl.org>

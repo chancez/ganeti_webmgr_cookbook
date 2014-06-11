@@ -24,24 +24,24 @@ passwords = Chef::EncryptedDataBagItem.load("ganeti_webmgr", "passwords")
 db_host = node['ganeti_webmgr']['database']['host']
 db_port = node['ganeti_webmgr']['database']['port']
 
-db_user = node['ganeti_webmgr']['db_server']['user']
-db_password = node['ganeti_webmgr']['db_server']['password'] || passwords['db_server']['password']
+server_user = node['ganeti_webmgr']['db_server']['user'] || passwords['db_server']['user']
+server_password = node['ganeti_webmgr']['db_server']['password'] || passwords['db_server']['password']
 
-gwm_db_user = node['ganeti_webmgr']['database']['user']
-gwm_db_pass = node['ganeti_webmgr']['database']['password'] ||  passwords['db_password']
+db_user = node['ganeti_webmgr']['database']['user']
+db_pass = node['ganeti_webmgr']['database']['password'] ||  passwords['db_password']
 
 mysql_connection_info = {
     :host => db_host,
     :port => db_port,
-    :username => db_user || 'root',
-    :password => db_password
+    :username => server_user || 'root',
+    :password => server_password
 }
 
 # postgres example not tested:
 postgresql_connection_info = {
   :host => db_host,
-  :username => db_user || 'postgres',
-  :password => db_password
+  :username => server_user || 'postgres',
+  :password => server_password
 }
 
 case node['ganeti_webmgr']['database']['engine'].split('.').last
@@ -67,16 +67,16 @@ database node['ganeti_webmgr']['database']['name'] do
 end
 
 # Create our user
-database_user gwm_db_user do
+database_user db_user do
   provider db_provider
   connection connection_info
   database_name node['ganeti_webmgr']['database']['name']
-  password gwm_db_pass
+  password db_pass
   action :create
 end
 
 # Give our user permissions to the DB
-database_user gwm_db_user do
+database_user db_user do
   provider db_user_provider
   connection connection_info
   database_name node['ganeti_webmgr']['database']['name']
