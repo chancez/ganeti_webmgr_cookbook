@@ -4,7 +4,7 @@ include_recipe "apache2::mod_wsgi"
 gwm = node['ganeti_webmgr']
 
 env = {
-  "GWM_CONFIG_DIR" => "#{gwm['config_dir']}" ,
+  "GWM_CONFIG_DIR" => gwm['config_dir'].to_s,
   "DJANGO_SETTINGS_MODULE" => "ganeti_webmgr.ganeti_web.settings"
 }
 

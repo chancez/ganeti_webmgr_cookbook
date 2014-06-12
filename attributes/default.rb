@@ -6,7 +6,7 @@ default['ganeti_webmgr']['repository'] = "https://github.com/osuosl/ganeti_webmg
 default['ganeti_webmgr']['revision'] = "develop"
 
 case node['platform']
-when 'redhat', 'centos', 'fedora'
+when 'redhat', 'centos', 'fedora', 'amazon', 'scientific'
   default['ganeti_webmgr']['packages'] = ['libffi-devel']
 when 'debian', 'ubuntu'
   default['ganeti_webmgr']['packages'] = ['libffi-dev']

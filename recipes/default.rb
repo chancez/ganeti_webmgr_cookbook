@@ -42,7 +42,7 @@ end
 # The first value is for our custom config directory
 # the second is for django-admin.py
 env = {
-  "GWM_CONFIG_DIR" => "#{node['ganeti_webmgr']['config_dir']}" ,
+  "GWM_CONFIG_DIR" => node['ganeti_webmgr']['config_dir'].to_s ,
   "DJANGO_SETTINGS_MODULE" => "ganeti_webmgr.ganeti_web.settings"
 }
 
