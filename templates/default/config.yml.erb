@@ -8,7 +8,7 @@ DATABASES:
         ENGINE: <%= @app["database"]["engine"] %>
         NAME: <%= @app["database"]["name"] %>
         USER: <%= @app["database"]["user"] %>
-        PASSWORD: <%= @db_pass %>
+        PASSWORD: "<%= @db_pass %>"
         HOST: <%= @app["database"]["host"] %>
         PORT: <%= @app["database"]["port"] %>
 ##### End Database Configuration #####
