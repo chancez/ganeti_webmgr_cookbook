@@ -114,7 +114,7 @@ execute "run_syncdb" do
   environment env
   user node['ganeti_webmgr']['user']
   group node['ganeti_webmgr']['group']
-  only_if { node['ganeti_webmgr']['migrate'] == true }
+  only_if { !!node['ganeti_webmgr']['migrate'] }
 end
 
 # migrate using django-admin.py
@@ -123,6 +123,6 @@ execute "run_migration" do
   environment env
   user node['ganeti_webmgr']['user']
   group node['ganeti_webmgr']['group']
-  only_if { node['ganeti_webmgr']['migrate'] == true }
+  only_if { !!node['ganeti_webmgr']['migrate'] }
 end
 
