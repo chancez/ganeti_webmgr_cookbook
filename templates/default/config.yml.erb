@@ -6,10 +6,10 @@
 DATABASES:
     default:
         ENGINE: <%= @app["database"]["engine"] %>
-        NAME: <%= @app["database"]["name"] %>
-        USER: <%= @app["database"]["user"] %>
+        NAME: "<%= @app["database"]["name"] %>"
+        USER: "<%= @app["database"]["user"] %>"
         PASSWORD: "<%= @db_pass %>"
-        HOST: <%= @app["database"]["host"] %>
+        HOST: "<%= @app["database"]["host"] %>"
         PORT: <%= @app["database"]["port"] %>
 ##### End Database Configuration #####
 
@@ -19,7 +19,7 @@ DEBUG: <%= @app['debug'] %>
 # Site name and domain referenced by some modules to provide links back to
 #  the site.
 SITE_NAME: Ganeti Web Manager
-SITE_DOMAIN: "localhost:8000"
+SITE_DOMAIN: <% @app['site_domain'] %>
 
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 TIME_ZONE: America/Los_Angeles
@@ -104,9 +104,9 @@ VNC_PROXY: "<%= @app['vnc_proxy'] %>"
 RAPI_CONNECT_TIMEOUT: 3
 
 <% if @secret_key %>
-SECRET_KEY: <%= @secret_key %>
+SECRET_KEY: "<%= @secret_key %>"
 <% end %>
 
 <% if @web_mgr_api_key %>
-WEB_MGR_API_KEY: <%= @web_mgr_api_key %>
+WEB_MGR_API_KEY: "<%= @web_mgr_api_key %>"
 <% end %>

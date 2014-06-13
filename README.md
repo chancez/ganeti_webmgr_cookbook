@@ -89,6 +89,12 @@ Attributes
     <td><tt>false</tt></td>
   </tr>
   <tr>
+    <td><tt>['ganeti_webmgr']['site_domain']</tt></td>
+    <td>String</td>
+    <td>This is the link used in some locations to link back to GWM.</td>
+    <td><tt>node['fqdn']</tt></td>
+  </tr>
+  <tr>
     <td><tt>['ganeti_webmgr']['static_root']</tt></td>
     <td>String</td>
     <td>Absolute path to where you want staticfiles to be collected to</td>

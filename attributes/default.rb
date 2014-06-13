@@ -22,6 +22,7 @@ default['ganeti_webmgr']['static_url'] = '/static'
 
 default['ganeti_webmgr']['debug'] = false
 default['ganeti_webmgr']['migrate'] = false
+default['ganeti_webmgr']['site_domain'] = node['fqdn']
 
 default['ganeti_webmgr']['haystack_whoosh_path'] = '/opt/ganeti_webmgr/whoosh_index'
 
