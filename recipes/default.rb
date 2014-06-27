@@ -77,6 +77,7 @@ execute "install_gwm" do
   environment env
   user node['ganeti_webmgr']['user']
   group node['ganeti_webmgr']['group']
+  creates node['ganeti_webmgr']['install_dir']
   action :run
 end
 
