@@ -127,3 +127,6 @@ execute "run_migration" do
   only_if { !!node['ganeti_webmgr']['migrate'] }
 end
 
+# run vncauthproxy setup
+include_recipe "ganeti_webmgr::vncauthproxy"
+
