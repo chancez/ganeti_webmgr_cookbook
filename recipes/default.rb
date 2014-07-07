@@ -128,5 +128,8 @@ execute "run_migration" do
 end
 
 # run vncauthproxy setup
-include_recipe "ganeti_webmgr::vncauthproxy"
+log "Setting up vncauthproxy runit script"
+
+include_recipe "runit"
+runit_service "vncauthproxy"
 
