@@ -131,5 +131,15 @@ end
 log "Setting up vncauthproxy runit script"
 
 include_recipe "runit"
-runit_service "vncauthproxy"
+runit_service "vncauthproxy" do
+  options({
+    'port' => node['ganeti_webmgr']['vncauthproxy']['port'],
+    'ip' => node['ganeti_webmgr']['vncauthproxy']['ip']
+  })
+end
+
+if !!node['ganeti_webmgr']['vncauthproxy']['flashpolicy_enabled']
+  runit_service "flashpolicy"
+end
+
 

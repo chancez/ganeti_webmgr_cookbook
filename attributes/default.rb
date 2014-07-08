@@ -60,3 +60,9 @@ default['ganeti_webmgr']['web_mgr_api_key'] = nil
 default['ganeti_webmgr']['db_server']['user'] = nil
 default['ganeti_webmgr']['db_server']['password'] = nil
 
+# VNC AuthProxy
+default['ganeti_webmgr']['vncauthproxy']['port'] = "8888"
+default['ganeti_webmgr']['vncauthproxy']['ip'] = "0.0.0.0"
+
+default['ganeti_webmgr']['vncauthproxy']['flashpolicy_enabled'] = true
+
