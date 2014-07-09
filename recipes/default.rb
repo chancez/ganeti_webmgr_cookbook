@@ -139,7 +139,7 @@ runit_service "vncauthproxy" do
   })
 end
 
-if !!node['ganeti_webmgr']['vncauthproxy']['flashpolicy_enabled']
+if node['ganeti_webmgr']['vncauthproxy']['flashpolicy_enabled']
   runit_service "flashpolicy" do
     options({
       'install_dir' => node['ganeti_webmgr']['install_dir']
