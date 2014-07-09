@@ -1,6 +1,7 @@
 require 'serverspec'
 
 include Serverspec::Helper::Exec
+include Serverspec::Helper::DetectOS
 
 describe "install and start the vncauthproxy daemon" do
   describe service("vncauthproxy") do
