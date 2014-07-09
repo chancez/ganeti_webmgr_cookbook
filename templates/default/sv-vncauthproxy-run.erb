@@ -1,2 +1,2 @@
 #!/bin/sh
-exec /opt/ganeti_webmgr/bin/twistd --nodaemon vncap -c tcp:<%= @options['port'] %>:interface=<%= @options['ip'] %>
+exec <%= @options['install_dir'] %>/bin/twistd --nodaemon vncap -c tcp:<%= @options['port'] %>:interface=<%= @options['ip'] %>
