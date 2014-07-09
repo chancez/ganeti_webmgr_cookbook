@@ -1,2 +1,2 @@
 #!/bin/sh
-exec <%= @options['install_dir'] %>/bin/twistd --nodaemon flashpolicy
+exec <%= ::File.join(@options['install_dir'], "/bin/twistd") %> --nodaemon flashpolicy
