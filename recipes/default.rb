@@ -127,3 +127,24 @@ execute "run_migration" do
   only_if { !!node['ganeti_webmgr']['migrate'] }
 end
 
+# run vncauthproxy setup
+log "Setting up vncauthproxy runit script"
+
+include_recipe "runit"
+runit_service "vncauthproxy" do
+  options({
+    'port' => node['ganeti_webmgr']['vncauthproxy']['port'],
+    'ip' => node['ganeti_webmgr']['vncauthproxy']['ip'],
+    'install_dir' => node['ganeti_webmgr']['install_dir']
+  })
+end
+
+if node['ganeti_webmgr']['vncauthproxy']['flashpolicy_enabled']
+  runit_service "flashpolicy" do
+    options({
+      'install_dir' => node['ganeti_webmgr']['install_dir']
+    })
+  end
+end
+
+
