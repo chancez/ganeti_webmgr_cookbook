@@ -34,6 +34,8 @@ default['ganeti_webmgr']['database']['password'] = nil
 default['ganeti_webmgr']['database']['host'] = nil
 default['ganeti_webmgr']['database']['port'] = nil
 
+default['ganeti_webmgr']['databag'] = 'passwords'
+
 default['ganeti_webmgr']['superusers'] = []
 
 default['ganeti_webmgr']['host'] = node['fqdn']

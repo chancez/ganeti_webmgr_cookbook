@@ -81,7 +81,9 @@ execute "install_gwm" do
   action :run
 end
 
-passwords = Chef::EncryptedDataBagItem.load("ganeti_webmgr", "passwords")
+passwords = Chef::EncryptedDataBagItem.load(
+  'ganeti_webmgr',
+  node['ganeti_webmgr']['databag'])
 
 db_pass = node['ganeti_webmgr']['database']['password'] || passwords['db_password']
 secret_key = node['ganeti_webmgr']['secret_key'] || passwords['secret_key']
