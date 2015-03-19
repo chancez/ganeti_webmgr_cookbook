@@ -34,7 +34,8 @@ default['ganeti_webmgr']['database']['password'] = nil
 default['ganeti_webmgr']['database']['host'] = nil
 default['ganeti_webmgr']['database']['port'] = nil
 
-default['ganeti_webmgr']['databag'] = 'passwords'
+default['ganeti_webmgr']['databag'] = 'ganeti_webmgr'
+default['ganeti_webmgr']['databag_item'] = 'passwords'
 
 default['ganeti_webmgr']['superusers'] = []
 
