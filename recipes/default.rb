@@ -18,6 +18,7 @@
 
 include_recipe "python"
 include_recipe "git"
+include_recipe 'build-essential::default'
 
 # Make sure the directory for GWM exists before we try to clone to it
 directory node['ganeti_webmgr']['path'] do

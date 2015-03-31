@@ -7,9 +7,9 @@ default['ganeti_webmgr']['revision'] = "develop"
 
 case node['platform']
 when 'redhat', 'centos', 'fedora', 'amazon', 'scientific'
-  default['ganeti_webmgr']['packages'] = ['libffi-devel']
+  default['ganeti_webmgr']['packages'] = ['libffi-devel', 'openssl-devel']
 when 'debian', 'ubuntu'
-  default['ganeti_webmgr']['packages'] = ['libffi-dev']
+  default['ganeti_webmgr']['packages'] = ['libffi-dev', 'openssl-dev']
 else
   default['ganeti_webmgr']['packages'] = []
 end
