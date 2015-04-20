@@ -7,9 +7,9 @@ default['ganeti_webmgr']['revision'] = "develop"
 
 case node['platform']
 when 'redhat', 'centos', 'fedora', 'amazon', 'scientific'
-  default['ganeti_webmgr']['packages'] = ['libffi-devel']
+  default['ganeti_webmgr']['packages'] = ['libffi-devel', 'openssl-devel']
 when 'debian', 'ubuntu'
-  default['ganeti_webmgr']['packages'] = ['libffi-dev']
+  default['ganeti_webmgr']['packages'] = ['libffi-dev', 'openssl-dev']
 else
   default['ganeti_webmgr']['packages'] = []
 end
@@ -33,6 +33,9 @@ default['ganeti_webmgr']['database']['user'] = nil
 default['ganeti_webmgr']['database']['password'] = nil
 default['ganeti_webmgr']['database']['host'] = nil
 default['ganeti_webmgr']['database']['port'] = nil
+
+default['ganeti_webmgr']['databag'] = 'ganeti_webmgr'
+default['ganeti_webmgr']['databag_item'] = 'passwords'
 
 default['ganeti_webmgr']['superusers'] = []
 

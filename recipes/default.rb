@@ -18,6 +18,7 @@
 
 include_recipe "python"
 include_recipe "git"
+include_recipe 'build-essential::default'
 
 # Make sure the directory for GWM exists before we try to clone to it
 directory node['ganeti_webmgr']['path'] do
@@ -81,7 +82,9 @@ execute "install_gwm" do
   action :run
 end
 
-passwords = Chef::EncryptedDataBagItem.load("ganeti_webmgr", "passwords")
+passwords = Chef::EncryptedDataBagItem.load(
+  node['ganeti_webmgr']['databag'],
+  node['ganeti_webmgr']['databag_item'])
 
 db_pass = node['ganeti_webmgr']['database']['password'] || passwords['db_password']
 secret_key = node['ganeti_webmgr']['secret_key'] || passwords['secret_key']
