@@ -1,9 +1,9 @@
-default['ganeti_webmgr']['path'] = "/opt/ganeti_webmgr_src"
+default['ganeti_webmgr']['path'] = '/opt/ganeti_webmgr_src'
 default['ganeti_webmgr']['user'] = nil
 default['ganeti_webmgr']['group'] = nil
 
 default['ganeti_webmgr']['repository'] = "https://github.com/osuosl/ganeti_webmgr"
-default['ganeti_webmgr']['revision'] = "develop"
+default['ganeti_webmgr']['revision'] = 'develop'
 
 case node['platform']
 when 'redhat', 'centos', 'fedora', 'amazon', 'scientific'
@@ -55,6 +55,9 @@ default['ganeti_webmgr']['apache']['server_aliases'] = [node['fqdn']]
 default['ganeti_webmgr']['apache']['processes'] = 4
 default['ganeti_webmgr']['apache']['threads'] = 1
 
+default['ganeti_webmgr']['certificate_file'] = nil
+default['ganeti_webmgr']['certificate_key_file'] = nil
+
 # secrets
 
 default['ganeti_webmgr']['secret_key'] = nil
@@ -64,8 +67,8 @@ default['ganeti_webmgr']['db_server']['user'] = nil
 default['ganeti_webmgr']['db_server']['password'] = nil
 
 # VNC AuthProxy
-default['ganeti_webmgr']['vncauthproxy']['port'] = "8888"
-default['ganeti_webmgr']['vncauthproxy']['ip'] = "0.0.0.0"
+default['ganeti_webmgr']['vncauthproxy']['port'] = '8888'
+default['ganeti_webmgr']['vncauthproxy']['ip'] = '0.0.0.0'
 
 default['ganeti_webmgr']['vncauthproxy']['flashpolicy_enabled'] = true
 
