@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: ganeti_webmgr
-# Recipe:: proxy_nginx
+# Recipe:: haystack
 #
 # Copyright 2013 Oregon State University
 #
@@ -14,27 +14,17 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
+# limitations under the License.
 
-
-include_recipe "nginx"
-
-app = node['ganeti_webmgr']
-host_name = app['http_proxy']['hostname'] || node['fqdn']
-
-template "#{node['nginx']['dir']}/sites-available/ganeti_webmgr.conf" do
-  source "nginx_site.conf.erb"
-  mode 0664
-  owner "root"
-  group "root"
-  variables(
-    :app          => app,
-    :host_name    => host_name,
-    :host_aliases => app['http_proxy']['host_aliases'],
-    :listen_ports => app['http_proxy']['listen_ports']
-  )
-  notifies :reload, "service[nginx]"
+directory node['ganeti_webmgr']['haystack_whoosh_path'] do
+  owner 'apache'
+  group 'apache'
+  action :create
 end
 
-nginx_site "ganeti_webmgr.conf" do
-  enable true
+bash 'update haystack whoosh index' do
+  code <<-EOH
+    #DJANGO_SETTINGS_MODULE="ganeti_webmgr.ganeti_web.settings" \
+    {node['ganeti_webmgr']['install_dir']}/bin/django-admin.py update_index
+  EOH
 end

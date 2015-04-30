@@ -31,19 +31,19 @@ Attributes
   <tr>
     <td><tt>['ganeti_webmgr']['path']</tt></td>
     <td>String</td>
-    <td>Full path to the location you want GWM at</td>
-    <td><tt>/var/lib/django/ganeti_webmgr</tt></td>
+    <td>Full path to the location GWM gets cloned. Note: This is not where it is installed.</td>
+    <td><tt>/opt/ganeti_webmgr_src</tt></td>
   </tr>
   <tr>
-    <td><tt>['ganeti_webmgr']['owner']</tt></td>
+    <td><tt>['ganeti_webmgr']['user']</tt></td>
     <td>String</td>
-    <td>Owner of the project and its virtual environment</td>
+    <td>User to change to when running commands</td>
     <td><tt>nil</tt></td>
   </tr>
   <tr>
     <td><tt>['ganeti_webmgr']['group']</tt></td>
     <td>String</td>
-    <td>Group of the project and its virtualenv</td>
+    <td>Group to change to when running commands</td>
     <td><tt>nil</tt></td>
   </tr>
   <tr>
@@ -65,45 +65,21 @@ Attributes
     <td><tt>[]</tt></td>
   </tr>
   <tr>
-    <td><tt>['ganeti_webmgr']['pip_packages']</tt></td>
-    <td>Array of strings</td>
-    <td>List of python packages to install before setting up GWM</td>
-    <td><tt>[]</tt></td>
+    <td><tt>['ganeti_webmgr']['install_dir']</tt></td>
+    <td>String</td>
+    <td>Where to actually install GWM to. This is the location setup.sh will create GWM's virtualenv</td>
+    <td><tt>/opt/ganeti_webmgr</tt></td>
   </tr>
   <tr>
-    <td><tt>['ganeti_webmgr']['virtualenv']</tt></td>
+    <td><tt>['ganeti_webmgr']['config_dir']</tt></td>
     <td>String</td>
-    <td>Full path to where you want GWM to store its virtual environment</td>
-    <td><tt>nil</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['requirements']</tt></td>
-    <td>String</td>
-    <td>Relative path from ['ganeti_webmgr']['path'] to the requirements file containing pip packages to install GWM</td>
-    <td><tt>nil</tt></td>
+    <td>Where gwm's config directory goes. This is the directory config.yml will be put into.</td>
+    <td><tt>/opt/ganeti_webmgr/config</tt></td>
   </tr>
   <tr>
     <td><tt>['ganeti_webmgr']['debug']</tt></td>
     <td>Boolean</td>
     <td>Whether or not to set the Django debug mode on or off</td>
-    <td><tt>false</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['local_settings_file']</tt></td>
-    <td>String</td>
-    <td>Relative path from ['ganeti_webmgr']['path'] to Ganeti Web Managers settings file.</td>
-    <td><tt>ganeti_webmgr/ganeti_web/settings/settings.py</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['settings_template']</tt></td>
-    <td>String</td>
-    <td>Path to settings.py chef template.</td>
-    <td><tt>settings.py.erb</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['overwrite_settings']</tt></td>
-    <td>Boolean</td>
-    <td>Overwrite existing settings files if it exists when deploying</td>
     <td><tt>false</tt></td>
   </tr>
   <tr>
@@ -113,22 +89,22 @@ Attributes
     <td><tt>false</tt></td>
   </tr>
   <tr>
-    <td><tt>['ganeti_webmgr']['settings']</tt></td>
-    <td>Hash</td>
-    <td>Additional settings to pass to ['ganeti_webmgr']['settings_template']</td>
-    <td><tt>{}</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['manage_file']</tt></td>
+    <td><tt>['ganeti_webmgr']['site_domain']</tt></td>
     <td>String</td>
-    <td>Relative path from ['ganeti_webmgr']['path'] to the GWM manage.py file</td>
-    <td><tt>ganeti_webmgr/manage.py</tt></td>
+    <td>This is the link used in some locations to link back to GWM.</td>
+    <td><tt>node['fqdn']</tt></td>
   </tr>
   <tr>
-    <td><tt>['ganeti_webmgr']['collectstatic_dir']</tt></td>
+    <td><tt>['ganeti_webmgr']['static_root']</tt></td>
     <td>String</td>
     <td>Absolute path to where you want staticfiles to be collected to</td>
-    <td><tt>['ganeti_webmgr']['path']/collected_static</tt></td>
+    <td><tt>/opt/ganeti_webmgr/collected_static</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['ganeti_webmgr']['static_url']</tt></td>
+    <td>String</td>
+    <td>Url to find GWM's static files at.</td>
+    <td><tt>/static</tt></td>
   </tr>
   <tr>
     <td><tt>['ganeti_webmgr']['database']['engine']</tt></td>
@@ -166,91 +142,39 @@ Attributes
     <td>See https://docs.djangoproject.com/en/1.4/ref/settings/#databases</td>
     <td><tt>nil</tt></td>
   </tr>
-</table>
-
-#### ganeti_webmgr::proxy
-<table>
   <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['host']</tt></td>
+    <td><tt>['ganeti_webmgr']['haystack_whoosh_path']</tt></td>
     <td>String</td>
-    <td>Host GWM is deployed on, for configuring http proxy</td>
-    <td><tt>node['fqdn']</tt></td>
+    <td>Where to put the search index files</td>
+    <td><tt>/opt/ganeti_webmgr/whoosh_index</tt></td>
   </tr>
   <tr>
-    <td><tt>['ganeti_webmgr']['port']</tt></td>
-    <td>Integer</td>
-    <td>Port GWM is listening on, for configuring http proxy</td>
-    <td><tt>8000</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['http_proxy']['variant']</tt></td>
+    <td><tt>['ganeti_webmgr']['vnc_proxy']</tt></td>
     <td>String</td>
-    <td>Used to specify what to use as an http_proxy. Valid options are "nginx"</td>
+    <td>The host:port pair where to access the VNCAuthProxy</td>
+    <td><tt>node['fqdn']:8888</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['ganeti_webmgr']['secret_key']</tt></td>
+    <td>String</td>
+    <td>The SECRET_KEY for GWM</td>
     <td><tt>nil</tt></td>
   </tr>
   <tr>
-    <td><tt>['ganeti_webmgr']['http_proxy']['host_name']</tt></td>
+    <td><tt>['ganeti_webmgr']['web_mgr_api_key']</tt></td>
     <td>String</td>
-    <td>Hostname of the http proxy</td>
-    <td><tt>node['fqdn']</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['http_proxy']['host_aliases']</tt></td>
-    <td>List</td>
-    <td>List of hostname aliases</td>
-    <td><tt>[]</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['http_proxy']['listen_ports']</tt></td>
-    <td>List of integers</td>
-    <td>List of ports for the http proxy to listen on</td>
-    <td><tt>[ 80 ]</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['auth_proxy']['fqdn']</tt></td>
-    <td>String</td>
-    <td>Where the VNC Auth Proxy is running</td>
-    <td><tt>node.fqdn</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['auth_proxy']['port']</tt></td>
-    <td>int</td>
-    <td>Port VNC Auth Proxy is running on</td>
-    <td><tt>8888</tt></td>
+    <td>The WEB_MGR_API_KEY for GWM</td>
+    <td><tt>nil</tt></td>
   </tr>
 </table>
 
 #### ganeti_webmgr::bootstrap_user
 <table>
   <tr>
-    <td><tt>['ganeti_webmgr']['admin_username']</tt></td>
-    <td>string</td>
-    <td>**Do not use in production.** Username of Django superuser to boostrap after deployment.</td>
-    <td><tt>nil</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['admin_password']</tt></td>
-    <td>string</td>
-    <td>**Do not use in production.** Password of Django superuser to boostrap after deployment.</td>
-    <td><tt>nil</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['admin_email']</tt></td>
-    <td>string</td>
-    <td>**Do not use in production.** Email of Django superuser to boostrap after deployment.</td>
-    <td><tt>nil</tt></td>
-  </tr>
-  <tr>
-    <td><tt>['ganeti_webmgr']['admin_email']</tt></td>
-    <td>string</td>
-    <td>**Do not use in production.** Email of Django superuser to boostrap after deployment.</td>
-    <td><tt>nil</tt></td>
+    <td><tt>['ganeti_webmgr']['superusers']</tt></td>
+    <td>List</td>
+    <td>Takes a list of hashes containing the following keys: username, email and password</td>
+    <td><tt>[]</tt></td>
   </tr>
 </table>
 
@@ -264,12 +188,63 @@ Attributes
   </tr>
 </table>
 
+
+#### ganeti_webmgr::apache
+<table>
+  <tr>
+    <td><tt>['ganeti_webmgr']['apache']['application_name']</tt></td>
+    <td>String</td>
+    <td>Name of vhost file. `.conf` is added to the end automatically.</td>
+    <td><tt>ganeti_webmgr</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['ganeti_webmgr']['apache']['server_name']</tt></td>
+    <td>String</td>
+    <td>Servername for apache vhost</td>
+    <td><tt>node['hostname']</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['ganeti_webmgr']['apache']['server_aliases']</tt></td>
+    <td>List</td>
+    <td>A list of server_alises for the apache vhost</td>
+    <td><tt>[node['fqdn']]</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['ganeti_webmgr']['apache']['processes']</tt></td>
+    <td>Int</td>
+    <td>Number of WSGI processes to run for GWM.</td>
+    <td><tt>4</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['ganeti_webmgr']['apache']['Threads']</tt></td>
+    <td>Int</td>
+    <td>Number of threads for each WSGI process in GWM.</td>
+    <td><tt>1</tt></td>
+  </tr>
+</table>
+
+#### ganeti_webmgr::database
+<table>
+  <tr>
+    <td><tt>['ganeti_webmgr']['db_server']['user']</tt></td>
+    <td>String</td>
+    <td>User to login to the database server as when creating a database for GWM.</td>
+    <td><tt>nil</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['ganeti_webmgr']['db_server']['password']</tt></td>
+    <td>String</td>
+    <td>Password to login to the database server as when creating a database for GWM.</td>
+    <td><tt>nil</tt></td>
+  </tr>
+</table>
+
 Usage
 -----
 #### ganeti_webmgr::default or ganeti_webmgr::mysql
 Just include `ganeti_webmgr` in your node's `run_list`.
-If you want to have it deploy with mysql and bootstrap a database for you use
-`ganeti_webmgr::mysql`:
+If you want to have it deploy, install mysql server and bootstrap a database for
+you use `ganeti_webmgr::mysql`:
 
 ```json
 {
@@ -290,6 +265,11 @@ or
   ]
 }
 ```
+
+Only use the mysql recipe if you want mysql server installed. If you simply want
+to use GWM with a different mysql server, use the `ganeti_webmgr::default`
+recipe and set the appropriate attributes.
+
 #### ganeti_webmgr::bootstrap_user
 Just include `ganeti_webmgr::bootstrap_user` in addition to one of the previous
 recipes in `run_list`:
@@ -304,11 +284,80 @@ recipes in `run_list`:
 }
 ```
 
+Then set the attribute `node['ganeti_webmgr']['superusers']` to something like
+this:
+
+````json
+[
+  {
+    "username": "foo",
+    "password": "bar",
+    "email": "foo@bar.com"
+  },
+  {
+    "username": "admin",
+    "password": "secret",
+    "email": "admin@bar.com"
+  }
+]
+````
+
 #### ganeti_webmgr::hosts
 
 This recipe is used to add hostname aliases in `/etc/hosts`.  In the vagrant
 environment, it defaults to adding hostnames to be used with [vagrant-
-ganeti](https://github.com/osuosl /vagrant-ganeti).
+ganeti](https://github.com/osuosl/vagrant-ganeti).
+
+Databags
+--------
+
+The `ganeti_webmgr` cookbook supports loading passwords and secrets using either
+attributes or through chef's encrypted databags.
+
+Currently the cookbook expects all secrets to be in a single databag called
+`ganeti_webmgr`, and in an item called `passwords`.
+
+Here are the list of values according to their purpose if you wish to use
+databags:
+
+* `db_password`: This is used with the `ganeti_webmgr::database` recipe. This is
+  what the recipe will set as the password for the user specified in
+  `node['ganeti_webmgr']['database']['user']` on the database being created.
+* `db_server`: This is a hash which should contain the key `password` and
+  optionally `user`, which are the actual credentials needed to login to the
+  database application (mysql/postgres) to add a user, and create a database
+  for that user. Essentially, this contains the credentials for a db user
+  with create database permissions.
+* `secret_key` and `web_mgr_api_key`: Each of these correspond directly to the
+  settings in GWM's config.yml.
+* `superusers`: This should be a list of hashes containing the keys `username`,
+  `password`, and `email`. Each item in the list will be added as a superuser to
+  GWM.
+
+**Note**: These databag values are only used if the attributes for them **are
+not set**
+
+Here's an example databag in unencrypted form for the vagrant environment:
+
+````json
+{
+    "id": "passwords",
+    "db_password": "vagrant",
+    "db_server": {
+        "password": "rootpass"
+    },
+    "secret_key": "eo6uuJeegah9vieHahnahriv5noivahT",
+    "web_mgr_api_key": "quae5aethaehahCeiquaenahjaice3ei",
+    "superusers": [
+        {
+            "username": "admin",
+            "password": "password",
+            "email": "admin@example.org"
+        }
+    ]
+}
+````
+
 
 License and Authors
 -------------------

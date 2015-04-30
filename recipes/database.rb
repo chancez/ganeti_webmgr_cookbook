@@ -19,32 +19,39 @@
 # Recipe to do database agnostic boostrapping
 # Creates a database, and a database user
 
-#TODO Retrieve username/password from databags
+passwords = Chef::EncryptedDataBagItem.load("ganeti_webmgr", "passwords")
 
 db_host = node['ganeti_webmgr']['database']['host']
 db_port = node['ganeti_webmgr']['database']['port']
+
+server_user = node['ganeti_webmgr']['db_server']['user'] || passwords['db_server']['user']
+server_password = node['ganeti_webmgr']['db_server']['password'] || passwords['db_server']['password']
+
+db_user = node['ganeti_webmgr']['database']['user']
+db_pass = node['ganeti_webmgr']['database']['password'] ||  passwords['db_password']
+
 mysql_connection_info = {
     :host => db_host,
     :port => db_port,
-    :username => 'root',
-    :password => node['mysql']['server_root_password']
+    :username => server_user || 'root',
+    :password => server_password
 }
 
 # postgres example not tested:
 postgresql_connection_info = {
   :host => db_host,
-  :username => 'postgres',
-  :password => node['postgresql']['password']['postgres']
+  :username => server_user || 'postgres',
+  :password => server_password
 }
 
-case node['ganeti_webmgr']['database']['engine']
+case node['ganeti_webmgr']['database']['engine'].split('.').last
 when 'mysql'
   include_recipe "mysql::client"
   include_recipe "database::mysql"
   db_provider = Chef::Provider::Database::Mysql
   db_user_provider = Chef::Provider::Database::MysqlUser
   connection_info = mysql_connection_info
-when 'psycopg2'
+when 'psycopg2', 'postgresql_psycopg2'
   include_recipe "postgresql"
   include_recipe "database::postgres"
   db_provider = Chef::Provider::Database::Postgresql
@@ -60,17 +67,16 @@ database node['ganeti_webmgr']['database']['name'] do
 end
 
 # Create our user
-gwm_db_user = node['ganeti_webmgr']['database']['user']
-database_user gwm_db_user do
+database_user db_user do
   provider db_provider
   connection connection_info
   database_name node['ganeti_webmgr']['database']['name']
-  password node['ganeti_webmgr']['database']['password']
+  password db_pass
   action :create
 end
 
 # Give our user permissions to the DB
-database_user gwm_db_user do
+database_user db_user do
   provider db_user_provider
   connection connection_info
   database_name node['ganeti_webmgr']['database']['name']

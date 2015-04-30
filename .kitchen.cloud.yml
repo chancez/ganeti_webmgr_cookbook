@@ -1,8 +1,15 @@
 ---
-driver:
-  name: vagrant
-  network:
-    - ["private_network", {ip: "33.33.33.110", adapter: 2}]
+driver_config:
+  openstack_username: <%= ENV['OS_USERNAME'] %>
+  openstack_api_key: <%= ENV['OS_PASSWORD'] %>
+  openstack_auth_url: <%= "#{ENV['OS_AUTH_URL']}/tokens" %>
+  key_name: <%= ENV['OS_SSH_KEYPAIR'] %>
+  private_key_path: <%= ENV['OS_PRIVATE_SSH_KEY'] %>
+  public_key_path: <%= ENV['OS_PUBLIC_SSH_KEY'] %>
+  openstack_tenant: <%= ENV['OS_TENANT_NAME'] %>
+  floating_ip: <%= ENV['OS_FLOATING_IP'] %>
+  flavor_ref: <%= ENV['OS_FLAVOR_REF'] %>
+  floating_ip_pool: <%= ENV['OS_FLOATING_IP_POOL'] %>
 
 provisioner:
   name: chef_solo
@@ -12,18 +19,10 @@ provisioner:
 
 platforms:
   - name: centos-6
-    driver_plugin: vagrant
+    driver_plugin: openstack
     driver_config:
-      box: centos-6-20140121
-      box_url: http://vagrant.osuosl.org/centos-6-20140121.box
-
-  - name: ubuntu-12.04
-    driver_plugin: vagrant
-    driver_config:
-      box: ubuntu-12.04-20140121
-      box_url: http://vagrant.osuosl.org/ubuntu-12.04-20140121.box
-    run_list:
-      - recipe[apt::default]
+      username: centos
+      image_ref: "CentOS 6.6"
 
 suites:
   - name: default
@@ -34,11 +33,12 @@ suites:
       - recipe[ganeti_webmgr::default]
       - recipe[ganeti_webmgr::bootstrap_user]
       - recipe[ganeti_webmgr::apache]
+      - recipe[ganeti_webmgr::haystack]
     attributes:
       ganeti_webmgr:
         database:
           engine: django.db.backends.sqlite3
-          name: /home/vagrant/gwm.db
+          name: /opt/ganeti_webmgr/gwm.db
         vncauthproxy:
           port: "8888"
 
@@ -50,3 +50,4 @@ suites:
       - recipe[ganeti_webmgr::mysql]
       - recipe[ganeti_webmgr::bootstrap_user]
       - recipe[ganeti_webmgr::apache]
+      - recipe[ganeti_webmgr::haystack]
